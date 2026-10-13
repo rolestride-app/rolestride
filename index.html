@@ -44,10 +44,13 @@
         <div class="field-card">
           <div class="field-top">
             <label for="resumeInput">1. Your Current Resume</label>
-            <label class="text-link">
-              Upload .txt file
-              <input type="file" id="resumeFileUpload" accept=".txt,.md" style="display:none;" />
-            </label>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <button type="button" id="btnLoadSampleDemo" class="text-link">Load sample demo</button>
+              <label class="text-link">
+                Upload .txt file
+                <input type="file" id="resumeFileUpload" accept=".txt,.md" style="display:none;" />
+              </label>
+            </div>
           </div>
           <textarea id="resumeInput" placeholder="Paste your current resume text here..."></textarea>
         </div>

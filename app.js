@@ -1058,6 +1058,16 @@ ${data.name}`;
       if (e.target === proModal) closeAllModals();
     });
 
+    const btnLoadSampleDemo = document.getElementById("btnLoadSampleDemo");
+    if (btnLoadSampleDemo) {
+      btnLoadSampleDemo.addEventListener("click", () => {
+        resumeInput.value = SAMPLE_RESUME;
+        jobInput.value = SAMPLE_JOB;
+        updateLivePage1Match();
+        showToast("Loaded sample resume & job description.");
+      });
+    }
+
     // Top-right button: Opens Pro modal
     btnOpenProModal.addEventListener("click", () => {
       openProModal();
@@ -1073,8 +1083,8 @@ ${data.name}`;
   checkAutoUrlUnlock();
   updateProStatusUI();
   bindEvents();
-  resumeInput.value = SAMPLE_RESUME;
-  jobInput.value = SAMPLE_JOB;
+  resumeInput.value = "";
+  jobInput.value = "";
   updateLivePage1Match();
   window.history.replaceState({ screen: 1 }, "");
 })();
