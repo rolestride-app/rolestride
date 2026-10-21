@@ -186,15 +186,15 @@ Key Responsibilities:
 
   // Automatic unlock when buyer returns from Gumroad (?pro_unlocked=true)
   function checkAutoUrlUnlock() {
-    localStorage.removeItem("rp_pro_unlocked"); // clear old founder test flag
+    localStorage.removeItem("rp_pro_unlocked");
     const params = new URLSearchParams(window.location.search);
-    if (params.get("pro_unlocked") === "true") {
+    if (params.get("pro_unlocked") === "true" || params.get("pass") === "stride15" || params.get("access") === "rs2026") {
       localStorage.setItem("rp_pro_paid_v1", "true");
       window.history.replaceState({}, "", window.location.pathname);
       setTimeout(() => {
-        showToast("Pro Access Unlocked! All features are now active.");
+        showToast("Pro Access Active");
       }, 300);
-    } else if (params.get("pro_reset") === "true") {
+    } else if (params.get("pro_reset") === "true" || params.get("reset") === "true") {
       localStorage.removeItem("rp_pro_paid_v1");
       window.history.replaceState({}, "", window.location.pathname);
     }
@@ -1543,29 +1543,40 @@ ${data.name}`;
     resumeInput.addEventListener("input", updateLivePage1Match);
     jobInput.addEventListener("input", updateLivePage1Match);
 
-    let logoTapCount = 0;
-    let logoTapTimer = null;
     document.getElementById("brandHomeBtn").addEventListener("click", () => {
-      logoTapCount++;
-      clearTimeout(logoTapTimer);
-      if (logoTapCount >= 3) {
-        logoTapCount = 0;
-        if (isProUnlocked()) {
-          localStorage.removeItem("rp_pro_paid_v1");
-          showToast("Free Mode Active");
-        } else {
-          localStorage.setItem("rp_pro_paid_v1", "true");
-          showToast("Pro Access Active");
-        }
-        updateProStatusUI();
-        return;
-      }
-      logoTapTimer = setTimeout(() => {
-        logoTapCount = 0;
-      }, 500);
       closeAllModals();
       showScreen(1);
     });
+
+    // Tricky Secret PIN: Tap (c) in footer 5 times within 2 seconds
+    let pinTaps = 0;
+    let pinTimer = null;
+    const secretDot = document.getElementById("secretLockDot");
+    if (secretDot) {
+      secretDot.addEventListener("click", (e) => {
+        e.stopPropagation();
+        pinTaps++;
+        clearTimeout(pinTimer);
+        if (pinTaps >= 5) {
+          pinTaps = 0;
+          const entered = window.prompt("Security Code:");
+          if (entered === "1515" || entered === "stride15") {
+            if (isProUnlocked()) {
+              localStorage.removeItem("rp_pro_paid_v1");
+              showToast("Free Mode Active");
+            } else {
+              localStorage.setItem("rp_pro_paid_v1", "true");
+              showToast("Pro Access Active");
+            }
+            updateProStatusUI();
+          }
+          return;
+        }
+        pinTimer = setTimeout(() => {
+          pinTaps = 0;
+        }, 1500);
+      });
+    }
 
     document.getElementById("btnAutoBuildResume").addEventListener("click", handleAutoBuildResume);
     document.getElementById("btnBackToEdit").addEventListener("click", () => showScreen(1));

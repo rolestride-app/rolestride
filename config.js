@@ -1,5 +1,5 @@
 // ============================================================================
-// ROLEPULSE - FOUNDER CONFIGURATION FILE (100% ZERO-COST SETUP)
+// ROLEPULSE - APPLICATION CONFIGURATION FILE (100% ZERO-COST SETUP)
 // ============================================================================
 // You can edit the links below anytime after you create your free Gumroad or
 // BuyMeACoffee account. No coding knowledge required!
@@ -25,7 +25,7 @@ window.ROLEPULSE_CONFIG = {
   proActivationCodes: [
     "RS-PRO-2026",
     "ROLESTRIDE-VIP",
-    "FOUNDER-TEST-KEY"
+    "RS-INTERNAL-2026"
   ],
 
   // 4. Free Usage Limits (Encourages upgrades while keeping core scanner 100% free)
