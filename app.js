@@ -1523,6 +1523,21 @@ ${data.name}`;
     document.getElementById("btnCloseProModalTop").addEventListener("click", closeAllModals);
     document.getElementById("btnCloseProModalBottom").addEventListener("click", closeAllModals);
 
+    const btnFounderTestToggle = document.getElementById("btnFounderTestToggle");
+    if (btnFounderTestToggle) {
+      btnFounderTestToggle.addEventListener("click", () => {
+        if (isProUnlocked()) {
+          localStorage.removeItem("rp_pro_paid_v1");
+          showToast("Switched back to Free Mode.");
+        } else {
+          localStorage.setItem("rp_pro_paid_v1", "true");
+          showToast("⚡ Founder Test: Pro Unlocked! All 4 tabs active.");
+        }
+        updateProStatusUI();
+        closeAllModals();
+      });
+    }
+
     legalModal.addEventListener("click", (e) => {
       if (e.target === legalModal) closeAllModals();
     });
