@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2.0.3" />
+  <link rel="stylesheet" href="styles.css?v=2.0.5" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -65,10 +65,10 @@
         <div class="field-card">
           <div class="field-top">
             <label for="resumeInput">1. Your Current Resume</label>
-            <div style="display:flex; gap:12px; align-items:center;">
-              <button type="button" id="btnLoadSampleDemo" class="text-link" style="font-weight:700; color:#1e3a8a;">⚡ Load sample demo</button>
+            <div class="field-actions">
+              <button type="button" id="btnLoadSampleDemo" class="text-link" style="font-weight:600; color:#0f766e;">Load Sample</button>
               <label class="text-link">
-                Upload .txt file
+                Upload .txt
                 <input type="file" id="resumeFileUpload" accept=".txt,.md" style="display:none;" />
               </label>
             </div>
@@ -281,43 +281,40 @@
   <div class="modal-backdrop" id="proModal">
     <div class="modal-card">
       <div class="modal-top">
-        <h3>RoleStride Pro — $15 One-Time</h3>
-        <button type="button" class="btn btn-secondary btn-sm" id="btnCloseProModalTop">Close</button>
+        <div>
+          <h3 style="font-size:1.18rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">RoleStride Pro</h3>
+          <span class="pro-price-badge">$15 One-Time • Lifetime Access</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnCloseProModalTop" style="padding:6px 12px; font-size:0.8rem;">Close</button>
       </div>
 
-      <p style="font-size:0.9rem; color:var(--text-secondary);">
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:14px; line-height:1.45;">
         Pay once and unlock the complete Job &amp; Interview Kit forever. No monthly subscription.
       </p>
 
       <ul class="pro-feature-list">
-        <li>• <strong>Clean, Watermark-Free Executive Resume PDFs</strong></li>
-        <li>• <strong>Tailored Cover Letter Generator &amp; PDF Download</strong></li>
-        <li>• <strong>LinkedIn SEO Profile Optimizer (3 Headlines &amp; "About" Story)</strong></li>
-        <li>• <strong>10-Question Interview Playbook + Printable PDF Guide</strong></li>
-        <li>• <strong>Salary Negotiation &amp; 60-Second Elevator Pitch Scripts</strong></li>
-        <li>• <strong>LinkedIn &amp; Hiring Manager Cold Outreach Emails</strong></li>
+        <li>✓ <strong>Clean, Watermark-Free Executive Resume PDFs</strong></li>
+        <li>✓ <strong>Tailored Cover Letter Generator &amp; Matching Stationery PDF</strong></li>
+        <li>✓ <strong>LinkedIn Recruiter SEO Optimizer (3 Headlines &amp; "About" Story)</strong></li>
+        <li>✓ <strong>10-Question Interview Playbook + Printable PDF Cheat Sheet</strong></li>
+        <li>✓ <strong>Salary Negotiation &amp; 60-Second Elevator Pitch Scripts</strong></li>
+        <li>✓ <strong>Hiring Manager &amp; Recruiter Cold Outreach Emails</strong></li>
       </ul>
 
-      <button type="button" id="btnInstantProCheckout" class="btn btn-emerald btn-lg" style="width:100%; margin-bottom:10px;">
+      <button type="button" id="btnInstantProCheckout" class="btn btn-emerald btn-lg" style="width:100%; margin-bottom:10px; font-weight:700;">
         Unlock Pro Now ($15)
       </button>
 
-      <button type="button" class="btn btn-secondary btn-sm" id="btnCloseProModalBottom" style="width:100%;">
+      <button type="button" class="btn btn-secondary btn-sm" id="btnCloseProModalBottom" style="width:100%; color:var(--text-secondary);">
         Continue with Free Plan
       </button>
-
-      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border-light); text-align: center;">
-        <button type="button" id="btnFounderTestToggle" style="background:none; border:none; color:var(--text-muted); font-size:0.78rem; text-decoration:underline; cursor:pointer; padding:4px;">
-          ⚡ Founder Mode: Toggle Pro (Test All Features)
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js?v=2.0.3"></script>
-  <script src="app.js?v=2.0.3"></script>
+  <script src="config.js?v=2.0.5"></script>
+  <script src="app.js?v=2.0.5"></script>
 </body>
 </html>

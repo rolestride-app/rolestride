@@ -1543,7 +1543,26 @@ ${data.name}`;
     resumeInput.addEventListener("input", updateLivePage1Match);
     jobInput.addEventListener("input", updateLivePage1Match);
 
+    let logoTapCount = 0;
+    let logoTapTimer = null;
     document.getElementById("brandHomeBtn").addEventListener("click", () => {
+      logoTapCount++;
+      clearTimeout(logoTapTimer);
+      if (logoTapCount >= 3) {
+        logoTapCount = 0;
+        if (isProUnlocked()) {
+          localStorage.removeItem("rp_pro_paid_v1");
+          showToast("Free Mode Active");
+        } else {
+          localStorage.setItem("rp_pro_paid_v1", "true");
+          showToast("Pro Access Active");
+        }
+        updateProStatusUI();
+        return;
+      }
+      logoTapTimer = setTimeout(() => {
+        logoTapCount = 0;
+      }, 500);
       closeAllModals();
       showScreen(1);
     });
@@ -1631,21 +1650,6 @@ ${data.name}`;
     document.getElementById("btnCloseProModalTop").addEventListener("click", closeAllModals);
     document.getElementById("btnCloseProModalBottom").addEventListener("click", closeAllModals);
 
-    const btnFounderTestToggle = document.getElementById("btnFounderTestToggle");
-    if (btnFounderTestToggle) {
-      btnFounderTestToggle.addEventListener("click", () => {
-        if (isProUnlocked()) {
-          localStorage.removeItem("rp_pro_paid_v1");
-          showToast("Switched back to Free Mode.");
-        } else {
-          localStorage.setItem("rp_pro_paid_v1", "true");
-          showToast("⚡ Founder Test: Pro Unlocked! All 4 tabs active.");
-        }
-        updateProStatusUI();
-        closeAllModals();
-      });
-    }
-
     legalModal.addEventListener("click", (e) => {
       if (e.target === legalModal) closeAllModals();
     });
@@ -1660,126 +1664,25 @@ ${data.name}`;
       });
     }
 
-    // 1-Click Role Suggestion Chips
     document.querySelectorAll(".suggestion-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
-        const presetKey = chip.getAttribute("data-preset") || "analyst";
+        const presetKey = chip.getAttribute("data-preset");
         applySuggestionPreset(presetKey);
       });
     });
 
-    // Top-right button: Opens Pro modal
-    btnOpenProModal.addEventListener("click", () => {
-      openProModal();
-    });
-
-    // Strict Payment Checkout Button (NEVER unlocks for free!)
-    document.getElementById("btnInstantProCheckout").addEventListener("click", () => {
-      const checkoutUrl = CONFIG.gumroadProUrl || "https://gumroad.com";
-      window.open(checkoutUrl, "_blank");
-    });
-  }
-
-  const PRESETS = {
-    analyst: {
-      label: "Data & BI Analyst",
-      resume: SAMPLE_RESUME,
-      job: SAMPLE_JOB
-    },
-    manager: {
-      label: "Project & Operations Manager",
-      resume: `AMIT VERMA
-amit.verma@email.com | +91 98765 12345 | Delhi NCR, India | linkedin.com/in/amit-verma-pm
-
-PROFESSIONAL SUMMARY
-Results-driven Project and Operations Manager with 4+ years of experience leading cross-functional teams, optimizing project delivery pipelines, and driving Agile sprint execution. Proven track record of managing $1.8M budget portfolios and cutting operational turnaround times by 28%.
-
-PROFESSIONAL EXPERIENCE
-Project Operations Lead | Nexa Enterprise Systems | 2023 – Present
-- Directed cross-functional engineering and operations teams of 14 across 6 concurrent client software delivery milestones.
-- Implemented Agile Scrum frameworks and Jira sprint workflows, reducing sprint cycle bottlenecks by 32%.
-- Managed $1.8M annual operational project budgets, tracking expenditure forecasts and vendor SLA performance.
-- Spearheaded executive stakeholder reporting, presenting weekly risk-mitigation and KPI dashboards to C-suite leadership.
-
-Operations Associate | Global Logistics Hub | 2021 – 2023
-- Coordinated multi-region supply chain dispatch workflows handling 450+ daily high-priority shipments.
-- Streamlined vendor communication protocols, resolving compliance and shipping escalations within 4-hour SLAs.
-- Analyzed operational delay metrics in Excel to design standardized handoff guidelines adopted across 3 distribution hubs.
-
-KEY PROJECTS & TECHNICAL DELIVERABLES
-Agile Workflow Modernization & Tool Migration | Jira, Confluence, Scrum | 2023
-- Led migration of 8 department workflows to centralized Jira tracking, improving team velocity visibility by 40%.
-- Conducted 12 Agile alignment workshops training 60+ team members on backlog grooming and sprint estimation.
-
-Vendor SLA Optimization & Cost Reduction Initiative | Process Improvement | 2022
-- Audited 18 third-party vendor contracts to identify billing discrepancies, saving $45,000 in annualized service fees.
-
-EDUCATION & CREDENTIALS
-Bachelor of Business Administration (BBA) | Delhi University | 2021
-Project Management Professional (PMP) Training Certified | PMI Chapter | 2023
-Certified ScrumMaster (CSM) | Scrum Alliance | 2022
-
-SKILLS
-Project Management, Agile, Scrum, Jira, Stakeholder Management, Process Improvement, Budget Management, Risk Management, Operations Management, KPI Tracking`,
-      job: `Project Manager — Enterprise Operations
-Company: Apex Global Technologies
-
-About the Role:
-We are seeking an experienced Project Manager to lead enterprise software delivery initiatives and cross-functional operations.
-
-Key Responsibilities:
-- Lead Agile sprint planning, daily standups, and retrospective ceremonies using Jira and Scrum methodologies.
-- Drive Stakeholder Management and communicate project milestones, risks, and KPIs to leadership.
-- Oversee Budget Management, vendor relationships, and Process Improvement initiatives across departments.
-- Ensure Quality Assurance, Risk Management, and compliance with corporate delivery standards.`
-    },
-    developer: {
-      label: "Software & Web Developer",
-      resume: `ROHAN MEHTA
-rohan.mehta@email.com | +91 98111 22334 | Pune, India | github.com/rohan-dev | linkedin.com/in/rohanmehta-dev
-
-PROFESSIONAL SUMMARY
-Full-Stack Software Engineer with 3+ years of experience engineering high-performance web applications, RESTful APIs, and scalable cloud architectures. Proficient in JavaScript, TypeScript, React, Node.js, SQL, and Docker, with a commitment to clean code, test-driven development, and 99.9% uptime reliability.
-
-PROFESSIONAL EXPERIENCE
-Software Engineer | CloudScale Technologies | 2023 – Present
-- Architected and built responsive web applications using React, TypeScript, and Node.js serving 120,000+ monthly active users.
-- Designed and optimized high-throughput PostgreSQL and SQL database queries, reducing average API response times by 45%.
-- Implemented automated CI/CD deployment pipelines using Docker, Git, and AWS, cutting production deployment time by 60%.
-- Collaborated cross-functionally with UI/UX product designers in Figma to build accessible, mobile-responsive interfaces.
-
-Junior Developer | TechSprint Solutions | 2022 – 2023
-- Developed REST API microservices in Node.js and Express to process customer authentication and billing workflows.
-- Wrote automated unit and integration tests using Jest, maintaining 88% test coverage across core application modules.
-- Refactored legacy frontend code into modular reusable React components, improving page load speeds by 28%.
-
-KEY PROJECTS & TECHNICAL DELIVERABLES
-High-Throughput Analytics Dashboard | React, TypeScript, Node.js, SQL | 2024
-- Engineered an interactive customer analytics dashboard rendering real-time data visualizations for 50,000+ daily events.
-- Implemented Redis caching layers to optimize heavy database aggregations, improving query speeds by 3.5x.
-
-Microservices Authentication Engine | Node.js, Docker, AWS | 2023
-- Built an isolated JWT authentication service handling token generation, rate limiting, and role-based permissions.
-
-EDUCATION & CREDENTIALS
-B.Tech in Computer Science & Engineering | Pune University | 2022
-AWS Certified Solutions Architect — Associate | Amazon Web Services | 2023
-
-SKILLS
-JavaScript, TypeScript, React, Node.js, SQL, PostgreSQL, REST API, Docker, AWS, Git, CI/CD, HTML, CSS, Next.js`,
-      job: `Full-Stack Software Engineer
-Company: CloudNative Labs
-
-About the Role:
-We are looking for a Full-Stack Software Engineer to build scalable web applications and cloud-native microservices.
-
-Key Responsibilities:
-- Build high-performance frontend interfaces using React, TypeScript, Next.js, and modern CSS frameworks.
-- Design resilient backend services, REST APIs, and database schemas using Node.js, SQL, PostgreSQL, and Docker.
-- Implement CI/CD pipelines, Git workflows, and cloud deployments on AWS.
-- Collaborate with agile product teams to ensure high code quality, system design standards, and fast delivery cycles.`
+    if (btnResetResumeEdits) {
+      btnResetResumeEdits.addEventListener("click", () => {
+        if (!originalGeneratedResume) {
+          showToast("No original version found to restore.");
+          return;
+        }
+        lastStructuredResume = JSON.parse(JSON.stringify(originalGeneratedResume));
+        renderFormattedResumeHTML(lastStructuredResume);
+        showToast("Resume edits reverted to original tailored version.");
+      });
     }
-  };
+  }
 
   function applySuggestionPreset(presetKey) {
     const preset = PRESETS[presetKey] || PRESETS.analyst;
