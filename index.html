@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2.0.1" />
+  <link rel="stylesheet" href="styles.css?v=2.0.3" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -156,10 +156,17 @@
               </button>
             </div>
           </div>
-          <textarea id="coverLetterOutput" style="min-height:300px; margin-bottom:12px;"></textarea>
-          <div style="display:flex; gap:10px;">
-            <button type="button" id="btnCopyCover" class="btn btn-primary btn-sm">Copy Cover Letter</button>
-            <button type="button" id="btnDownloadCoverPdf" class="btn btn-emerald btn-sm">Download Cover Letter PDF</button>
+
+          <div class="edit-hint-bar" style="margin-bottom: 12px;">
+            <span>✏️ <strong>Live Editable:</strong> Click anywhere on the letter below to customize it directly before downloading.</span>
+          </div>
+
+          <div id="formattedCoverLetterPaper" class="formatted-resume-paper cover-paper" contenteditable="true" spellcheck="false" style="margin-bottom: 16px;"></div>
+          <textarea id="coverLetterOutput" style="display:none;"></textarea>
+
+          <div class="pane-actions-footer">
+            <button type="button" id="btnCopyCover" class="btn btn-secondary btn-sm">Copy Cover Letter</button>
+            <button type="button" id="btnDownloadCoverPdf" class="btn btn-emerald">Download Cover Letter PDF</button>
           </div>
         </div>
       </div>
@@ -298,7 +305,7 @@
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js?v=2.0.2"></script>
-  <script src="app.js?v=2.0.2"></script>
+  <script src="config.js?v=2.0.3"></script>
+  <script src="app.js?v=2.0.3"></script>
 </body>
 </html>

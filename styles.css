@@ -823,3 +823,440 @@ textarea {
 .toast.show {
   display: block;
 }
+
+/* Executive Cover Letter Paper */
+.cover-paper {
+  background: #ffffff;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  padding: 48px 54px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  color: #111827;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1.55;
+}
+
+.cover-letter-body p {
+  margin-bottom: 14px;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: #1f2937;
+}
+
+.pane-actions-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVE DESIGN (MOBILE, TABLET, LAPTOP)
+   ========================================================================== */
+
+/* Universal Mobile Optimizations (< 640px) */
+@media (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: 12px 14px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .brand-logo {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+  .brand-name {
+    font-size: 1rem;
+  }
+  .nav-actions .btn {
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+
+  /* Main Container & Screens */
+  .stage-container {
+    padding: 0 10px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .step-screen {
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
+
+  /* Screen 1 Header */
+  .screen-header {
+    margin-bottom: 16px;
+  }
+  .screen-header h2 {
+    font-size: 1.25rem;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .screen-header p {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  /* 1-Click Role Suggestions */
+  .suggestion-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+  .suggestion-label {
+    font-size: 0.78rem;
+    margin-bottom: 2px;
+  }
+  .suggestion-chip {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    white-space: normal;
+  }
+
+  /* Input Grid */
+  .input-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .field-top label {
+    font-size: 0.82rem;
+  }
+  .field-top .text-link {
+    font-size: 0.75rem;
+  }
+  .field-card textarea {
+    min-height: 160px;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  /* Match Bar */
+  .match-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 12px;
+    gap: 14px;
+  }
+  .match-bar-left {
+    min-width: 0;
+    width: 100%;
+    gap: 12px;
+  }
+  .score-circle {
+    width: 52px;
+    height: 52px;
+    font-size: 0.96rem;
+  }
+  .match-text h3 {
+    font-size: 0.9rem;
+    line-height: 1.25;
+    margin-bottom: 2px;
+  }
+  .match-text p {
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+  #btnAutoBuildResume {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    justify-content: center;
+  }
+
+  /* Screen 2 Top Summary Bar */
+  .result-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+  }
+  .result-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  #autoBannerTitle {
+    font-size: 0.82rem;
+    width: 100%;
+    color: var(--text-secondary);
+  }
+  .result-top-bar > div:last-child {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  #btnResetResumeEdits {
+    padding: 9px 12px;
+    font-size: 0.78rem;
+  }
+  #btnDownloadDirectPdf {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.84rem;
+    justify-content: center;
+  }
+
+  /* 5-Tab Switcher - Native Horizontal Swipe */
+  .doc-toolbar {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .doc-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+  .doc-tabs {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    width: max-content;
+    gap: 4px;
+    padding: 3px;
+  }
+  .doc-tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+  }
+
+  /* Live Edit Bar */
+  .edit-hint-bar {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  /* Watermark notice */
+  .watermark-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    text-align: center;
+  }
+  .watermark-bar .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* The Paper Documents (Resume & Cover Letter) */
+  .formatted-resume-paper,
+  .cover-paper {
+    padding: 20px 14px;
+    border-radius: 4px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  .exec-name {
+    font-size: 1.35rem !important;
+    margin-bottom: 2px;
+  }
+  .exec-role {
+    font-size: 0.8rem !important;
+    margin-bottom: 3px;
+  }
+  .exec-contact {
+    font-size: 0.72rem !important;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .exec-section {
+    margin-bottom: 12px;
+  }
+  .exec-section-title {
+    font-size: 0.8rem;
+    margin-bottom: 3px;
+  }
+  .exec-entry {
+    margin-bottom: 10px;
+  }
+  .exec-entry-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    margin-bottom: 2px;
+  }
+  .exec-entry-title {
+    font-size: 0.85rem;
+  }
+  .exec-entry-org {
+    font-size: 0.8rem;
+  }
+  .exec-entry-date {
+    font-size: 0.74rem;
+    color: #6b7280;
+    margin-bottom: 2px;
+  }
+  .exec-bullets {
+    padding-left: 14px;
+    font-size: 0.78rem;
+    line-height: 1.38;
+    gap: 2px;
+  }
+  .exec-skills-grid {
+    font-size: 0.78rem;
+    line-height: 1.38;
+    gap: 3px;
+  }
+
+  /* Pane Actions Footer */
+  .pane-actions-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+  }
+  .pane-actions-footer .btn {
+    width: 100%;
+    padding: 10px 8px;
+    font-size: 0.8rem;
+    justify-content: center;
+  }
+
+  /* Pro Lock Screens */
+  .pro-lock-overlay {
+    padding: 12px;
+  }
+  .lock-card {
+    padding: 18px 14px;
+    width: 100%;
+    max-width: 320px;
+  }
+  .lock-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+  .lock-card p {
+    font-size: 0.76rem;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+  .lock-card .btn {
+    padding: 10px;
+    font-size: 0.82rem;
+  }
+
+  /* Interview Playbook & Outreach Items on Mobile */
+  .qa-card {
+    padding: 12px;
+    gap: 8px;
+  }
+  .qa-card-header h4 {
+    font-size: 0.85rem;
+  }
+  .qa-answer {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  /* Modals on Mobile - Clean Sheet Style */
+  .modal-backdrop {
+    padding: 8px;
+    align-items: flex-end;
+  }
+  .modal-card {
+    padding: 18px 14px;
+    max-height: 86vh;
+    border-radius: 16px 16px 8px 8px;
+    width: 100%;
+  }
+  .modal-top {
+    margin-bottom: 12px;
+  }
+  .modal-top h3 {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+  .pro-feature-list {
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    gap: 6px;
+    margin: 10px 0 14px;
+  }
+  #btnInstantProCheckout {
+    padding: 12px;
+    font-size: 0.92rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 16px 12px;
+  }
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    font-size: 0.76rem;
+  }
+  .legal-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+/* Tablet Optimizations (641px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .stage-container {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+  .step-screen {
+    padding: 24px 20px;
+  }
+  .input-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .formatted-resume-paper,
+  .cover-paper {
+    padding: 36px 36px;
+    max-width: 100%;
+  }
+  .doc-toolbar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
+  .doc-tabs {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    width: max-content;
+  }
+  .doc-tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}

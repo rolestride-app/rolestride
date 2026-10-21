@@ -931,7 +931,7 @@ Feel free to connect or reach out directly at ${contactEmail} to discuss industr
     autoBannerTitle.textContent = `Tailored for ${data.roleTitle}`;
 
     const topSkills = data.allFinalSkills.slice(0, 5).join(", ") || "relevant job skills";
-    coverLetterOutput.value = `Dear Hiring Manager at ${data.company},
+    const plainCoverText = `Dear Hiring Manager at ${data.company},
 
 I am writing to express my strong interest in the ${data.roleTitle} position at ${data.company}. With hands-on proficiency across ${topSkills}, I am well-positioned to contribute immediately to your team's objectives.
 
@@ -941,6 +941,37 @@ I have attached my updated executive resume for your review. Thank you for your 
 
 Sincerely,
 ${data.name}`;
+
+    coverLetterOutput.value = plainCoverText;
+
+    const formattedCoverLetterPaper = document.getElementById("formattedCoverLetterPaper");
+    if (formattedCoverLetterPaper) {
+      const todayDate = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+      formattedCoverLetterPaper.innerHTML = `
+        <div class="exec-header">
+          <div class="exec-name">${data.name}</div>
+          <div class="exec-role">${data.roleTitle}</div>
+          <div class="exec-contact">${data.contact}</div>
+        </div>
+
+        <div style="margin: 20px 0 16px; font-size: 0.88rem; color: #4b5563; line-height: 1.45;">
+          <div>${todayDate}</div>
+          <div style="margin-top: 8px; font-weight: 700; color: #111827;">Hiring Team &amp; Leadership</div>
+          <div>${data.company}</div>
+        </div>
+
+        <div class="cover-letter-body">
+          <p>Dear Hiring Manager at ${data.company},</p>
+          <p>I am writing to express my strong interest in the <strong>${data.roleTitle}</strong> position at <strong>${data.company}</strong>. With hands-on proficiency across ${topSkills}, I am well-positioned to contribute immediately to your team's objectives.</p>
+          <p>Throughout my professional career, I have focused on transforming complex operational and business requirements into reliable, measurable results. My background aligns directly with the core competencies outlined in your job description, and I welcome the opportunity to drive similar high-impact outcomes for ${data.company}.</p>
+          <p>I have attached my updated executive resume for your review. Thank you for your time and consideration, and I look forward to the possibility of discussing how my experience can benefit your team.</p>
+          <p style="margin-top: 14px;">
+            Sincerely,<br>
+            <strong style="color: #111827;">${data.name}</strong>
+          </p>
+        </div>
+      `;
+    }
 
     updateProStatusUI();
     showScreen(2);
@@ -1324,18 +1355,84 @@ ${data.name}`;
       return;
     }
     if (!window.jspdf || !window.jspdf.jsPDF) return;
+
+    const coverPaper = document.getElementById("formattedCoverLetterPaper");
+    const liveResume = syncEditedResumeFromDOM() || lastStructuredResume;
+    const candidateName = (liveResume && liveResume.name) || "CANDIDATE NAME";
+    const candidateRole = (liveResume && liveResume.roleTitle) || "";
+    const candidateContact = (liveResume && liveResume.contact) || "";
+    const targetCo = (liveResume && liveResume.company) || "Target Company";
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const margin = 54;
-    const contentWidth = doc.internal.pageSize.getWidth() - margin * 2;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const centerX = pageWidth / 2;
+    const margin = 48;
+    const contentWidth = pageWidth - margin * 2;
+    let y = 48;
+
+    // 1. Executive Header (Matching Resume)
+    doc.setFont("times", "bold");
+    doc.setFontSize(21);
+    doc.setTextColor(17, 24, 39);
+    doc.text(candidateName, centerX, y, { align: "center" });
+    y += 18;
+
+    if (candidateRole && candidateRole.trim().length > 0) {
+      doc.setFont("times", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(30, 58, 138); // Classic executive navy
+      doc.text(candidateRole.toUpperCase(), centerX, y, { align: "center" });
+      y += 14;
+    }
+
+    if (candidateContact && candidateContact.trim().length > 0) {
+      doc.setFont("times", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(75, 85, 99);
+      doc.text(candidateContact, centerX, y, { align: "center" });
+      y += 10;
+    }
+
+    doc.setDrawColor(17, 24, 39);
+    doc.setLineWidth(1.4);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 24;
+
+    // 2. Date & Recipient
+    const todayStr = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    doc.setFont("times", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(75, 85, 99);
+    doc.text(todayStr, margin, y);
+    y += 16;
+    doc.setFont("times", "bold");
+    doc.setTextColor(17, 24, 39);
+    doc.text("Hiring Team & Leadership", margin, y);
+    y += 14;
+    doc.setFont("times", "normal");
+    doc.setTextColor(75, 85, 99);
+    doc.text(targetCo, margin, y);
+    y += 24;
+
+    // 3. Letter Body (Respects live on-screen edits!)
+    let letterText = coverLetterOutput.value || "";
+    if (coverPaper) {
+      const bodyEl = coverPaper.querySelector(".cover-letter-body");
+      if (bodyEl) {
+        letterText = bodyEl.innerText.trim();
+      }
+    }
 
     doc.setFont("times", "normal");
-    doc.setFontSize(11.5);
-    doc.setTextColor(24, 24, 27);
-    const lines = doc.splitTextToSize(coverLetterOutput.value || "", contentWidth);
-    doc.text(lines, margin, 68);
-    doc.save("cover_letter.pdf");
-    showToast("Cover Letter PDF downloaded.");
+    doc.setFontSize(10.5);
+    doc.setTextColor(31, 41, 55);
+    const bodyLines = doc.splitTextToSize(letterText, contentWidth);
+    doc.text(bodyLines, margin, y);
+
+    const cleanFileName = candidateName.replace(/[^a-z0-9]/gi, "_").toLowerCase() || "executive";
+    doc.save(`${cleanFileName}_cover_letter.pdf`);
+    showToast("Executive Cover Letter PDF downloaded.");
   }
 
   function downloadDirectInterviewPdf() {
@@ -1510,7 +1607,15 @@ ${data.name}`;
         openProModal();
         return;
       }
-      navigator.clipboard.writeText(coverLetterOutput.value || "");
+      const coverPaper = document.getElementById("formattedCoverLetterPaper");
+      let textToCopy = coverLetterOutput.value || "";
+      if (coverPaper) {
+        const bodyEl = coverPaper.querySelector(".cover-letter-body");
+        if (bodyEl) {
+          textToCopy = bodyEl.innerText.trim();
+        }
+      }
+      navigator.clipboard.writeText(textToCopy);
       showToast("Cover Letter copied.");
     });
 
