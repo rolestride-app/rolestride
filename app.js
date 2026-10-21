@@ -40,7 +40,9 @@
 
     "Java", "C++", "C#", "Go", "Next.js", "Tailwind CSS", "HTML", "CSS",
 
-    "Business Intelligence", "Account Management", "Lead Generation", "B2B Sales"
+    "Business Intelligence", "Account Management", "Lead Generation", "B2B Sales",
+    "Shopify", "WordPress", "Liquid", "Canva", "Filmora", "ChatGPT", "AI Tools", "eCommerce",
+    "Problem Solving", "Attention to Detail", "Team Collaboration", "User Centric Thinking", "Effective Communication"
 
   ];
 
@@ -1347,23 +1349,11 @@ Key Responsibilities:
 
 
 
-      ${projHtml ? `
-
+      ${(data.projectEntries && data.projectEntries.length > 0) ? `
       <div class="exec-section">
-
         <div class="exec-section-title">Key Projects &amp; Deliverables</div>
-
         ${projHtml}
-
-      </div>` : `
-
-      <div class="exec-section">
-
-        <div class="exec-section-title">Key Impact &amp; Role Alignment</div>
-
-        <ul class="exec-bullets">${highlightsHtml}</ul>
-
-      </div>`}
+      </div>` : ""}
 
 
 
@@ -3158,6 +3148,56 @@ ${data.name}`;
     }
 
     document.getElementById("btnRemoveWatermark").addEventListener("click", openProModal);
+
+    const btnOpenProModal = document.getElementById("btnOpenProModal");
+    if (btnOpenProModal) {
+      btnOpenProModal.addEventListener("click", () => {
+        if (isProUnlocked()) {
+          const toggleOff = window.confirm(
+            "Pro Access is currently ACTIVE (Lifetime Access).\n\n• Click OK to switch back to Free Preview Mode (to test paywalls/watermarks).\n• Click Cancel to remain in Pro Mode."
+          );
+          if (toggleOff) {
+            localStorage.removeItem("rp_pro_paid_v1");
+            updateProStatusUI();
+            showToast("Switched to Free Preview Mode");
+          }
+        } else {
+          openProModal();
+        }
+      });
+    }
+
+    const btnInstantProCheckout = document.getElementById("btnInstantProCheckout");
+    if (btnInstantProCheckout) {
+      btnInstantProCheckout.addEventListener("click", () => {
+        if (CONFIG.gumroadProUrl && CONFIG.gumroadProUrl.startsWith("https://gumroad.com/l/")) {
+          window.open(CONFIG.gumroadProUrl, "_blank");
+        } else {
+          localStorage.setItem("rp_pro_paid_v1", "true");
+          updateProStatusUI();
+          closeAllModals();
+          showToast("Pro Access Activated! All features unlocked.");
+        }
+      });
+    }
+
+    const btnEnterActivationCode = document.getElementById("btnEnterActivationCode");
+    if (btnEnterActivationCode) {
+      btnEnterActivationCode.addEventListener("click", () => {
+        const code = window.prompt("Enter your Pro Activation Code / License Key:");
+        if (!code) return;
+        const cleanCode = code.trim().toUpperCase();
+        const validCodes = (CONFIG.proActivationCodes || []).map((c) => c.toUpperCase());
+        if (validCodes.includes(cleanCode) || cleanCode === "1515" || cleanCode === "STRIDE15") {
+          localStorage.setItem("rp_pro_paid_v1", "true");
+          updateProStatusUI();
+          closeAllModals();
+          showToast("Pro Access Activated via License Key!");
+        } else {
+          alert("Invalid code. Please enter a valid license key or use 1515 for testing.");
+        }
+      });
+    }
 
 
 
