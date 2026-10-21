@@ -135,27 +135,30 @@ Key Responsibilities:
     privacy: {
       title: "Privacy Policy",
       html: `
-        <p><strong>1. Private Browser Processing:</strong> RoleStride runs 100% inside your own web browser. Your resume and job descriptions stay on your device and are never uploaded to external servers.</p>
-        <p><strong>2. Secure Payments:</strong> Pro upgrades are processed securely by Gumroad. RoleStride never sees or stores your payment details.</p>
+        <p><strong>1. 100% Client-Side Processing:</strong> RoleStride runs entirely within your personal web browser. Your resume, career history, and job descriptions are never transmitted to, processed by, or stored on external servers or third-party databases.</p>
+        <p><strong>2. Zero Tracking & Cookies:</strong> RoleStride does not track your browsing habits, sell personal data, or use invasive advertising tracking cookies.</p>
+        <p><strong>3. Payment Security:</strong> Pro upgrades are securely handled by Gumroad. RoleStride never collects, views, or stores financial credentials or credit card numbers.</p>
       `
     },
     terms: {
       title: "Terms of Service",
       html: `
-        <p><strong>1. Personal Use:</strong> You may use RoleStride to tailor your resume, generate cover letters, prepare interview answers, and download PDF resumes.</p>
-        <p><strong>2. Final Review:</strong> Please review your generated resume before sending it to employers to ensure all details match your background.</p>
+        <p><strong>1. Personal License:</strong> RoleStride grants you a personal, non-exclusive license to format resumes, draft cover letters, generate interview guides, and download PDF assets.</p>
+        <p><strong>2. Candidate Responsibility:</strong> Candidates agree to verify all generated information before submitting materials to employers to ensure all qualifications honestly reflect their background.</p>
       `
     },
     disclaimer: {
-      title: "Disclaimer",
+      title: "Disclaimer & Independent Status",
       html: `
-        <p>RoleStride formats and aligns your resume with your target job description. Final hiring decisions are made by the employer. RoleStride is an independent utility and is not affiliated with LinkedIn, Indeed, Naukri, or Google.</p>
+        <p><strong>1. Independent Career Utility:</strong> RoleStride is an independent productivity software designed to assist job seekers in formatting and tailoring career documents. RoleStride is not affiliated with, sponsored by, or endorsed by Harvard University, Google LLC, LinkedIn Corporation, Indeed, or Naukri.</p>
+        <p><strong>2. No Employment Guarantees:</strong> While RoleStride optimizes documents based on standard executive guidelines, final interview invitations and hiring decisions remain solely at the discretion of individual employers.</p>
       `
     },
     refund: {
       title: "Refund Policy",
       html: `
-        <p>You can test the match score and preview your tailored resume for free before upgrading. When you purchase the $15 one-time Pro upgrade, all Pro features unlock immediately.</p>
+        <p><strong>1. Free Instant Preview:</strong> Users are encouraged to test match scores and preview tailored outputs before upgrading.</p>
+        <p><strong>2. Digital Purchase:</strong> Because RoleStride Pro delivers immediate digital asset access and feature unlocks, purchases are managed under Gumroad's standard digital goods policies.</p>
       `
     }
   };
