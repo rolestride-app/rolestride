@@ -3170,32 +3170,9 @@ ${data.name}`;
     const btnInstantProCheckout = document.getElementById("btnInstantProCheckout");
     if (btnInstantProCheckout) {
       btnInstantProCheckout.addEventListener("click", () => {
-        if (CONFIG.gumroadProUrl && CONFIG.gumroadProUrl.startsWith("https://gumroad.com/l/")) {
-          window.open(CONFIG.gumroadProUrl, "_blank");
-        } else {
-          localStorage.setItem("rp_pro_paid_v1", "true");
-          updateProStatusUI();
-          closeAllModals();
-          showToast("Pro Access Activated! All features unlocked.");
-        }
-      });
-    }
-
-    const btnEnterActivationCode = document.getElementById("btnEnterActivationCode");
-    if (btnEnterActivationCode) {
-      btnEnterActivationCode.addEventListener("click", () => {
-        const code = window.prompt("Enter your Pro Activation Code / License Key:");
-        if (!code) return;
-        const cleanCode = code.trim().toUpperCase();
-        const validCodes = (CONFIG.proActivationCodes || []).map((c) => c.toUpperCase());
-        if (validCodes.includes(cleanCode) || cleanCode === "1515" || cleanCode === "STRIDE15") {
-          localStorage.setItem("rp_pro_paid_v1", "true");
-          updateProStatusUI();
-          closeAllModals();
-          showToast("Pro Access Activated via License Key!");
-        } else {
-          alert("Invalid code. Please enter a valid license key or use 1515 for testing.");
-        }
+        const checkoutUrl = (CONFIG.gumroadProUrl && CONFIG.gumroadProUrl.trim()) ? CONFIG.gumroadProUrl.trim() : "https://gumroad.com";
+        showToast("Opening secure $15 checkout...");
+        window.open(checkoutUrl, "_blank");
       });
     }
 
