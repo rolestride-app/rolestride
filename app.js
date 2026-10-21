@@ -84,26 +84,40 @@
   }
 
   const SAMPLE_RESUME = `PRIYA SHARMA
-priya.sharma@email.com | +91 98765 43210 | Bengaluru, India
+priya.sharma@email.com | +91 98765 43210 | Bengaluru, India | linkedin.com/in/priya-sharma-data
 
 PROFESSIONAL SUMMARY
-Business and Data Analyst with 2 years of experience preparing reports, analyzing sales trends, and supporting business operations.
+Results-driven Business Intelligence and Data Analyst with 3+ years of experience transforming complex multi-source data into automated reporting architectures, executive dashboards, and actionable operational insights. Adept at leveraging SQL, Python, Tableau, and Excel to bridge business strategy with technical execution, consistently improving operational efficiency and executive decision velocity.
 
 PROFESSIONAL EXPERIENCE
 Junior Data Analyst | Apex Retail Group | 2024 – Present
-- Responsible for creating weekly sales reports using Excel and SQL.
-- Worked on cleaning customer data and preparing charts for the marketing team.
-- Helped with tracking monthly targets and customer feedback.
+- Designed and automated weekly multi-region sales reporting systems using SQL and Excel, reducing manual turnaround time by 35%.
+- Structured, cleaned, and analyzed customer transactional datasets across 140+ retail locations to identify monthly margin trends and high-value customer clusters.
+- Built interactive Tableau and Power BI visual dashboards for senior marketing leadership, tracking $4.2M in quarterly promotional campaign targets.
+- Collaborated cross-functionally with supply chain and digital marketing teams to eliminate inventory reporting discrepancies and streamline demand forecasts.
 
-Operations Intern | Metro Logistics | 2023 – 2024
-- Assisted in updating inventory spreadsheets and daily order logs.
-- Duties included coordinating with team members to solve delivery delays.
+Operations Analyst | Metro Logistics Solutions | 2023 – 2024
+- Maintained and optimized centralized inventory models and daily order dispatch logs tracking over 1,200 regional freight shipments.
+- Partnered cross-functionally with warehouse supervisors and freight carriers to resolve delivery bottlenecks, reducing turnaround delays by 22%.
+- Evaluated delivery route performance metrics and prepared weekly KPI performance summaries presented to regional operations directors.
+- Automated daily order reconciliation workflows in Excel, saving 8 operational hours per week for the logistics support team.
 
-EDUCATION
-B.Com in Business Analytics | Christ University | 2023
+KEY PROJECTS & TECHNICAL DELIVERABLES
+Enterprise Sales Forecasting & Revenue Pipeline | Python, SQL, Tableau | 2024
+- Developed a dynamic sales forecasting model analyzing 24 months of historical retail transactions to project seasonal demand swings with 91% accuracy.
+- Automated pipeline data extraction using SQL queries, eliminating manual data entry and delivering real-time dashboards to commercial directors.
+
+Customer Churn Analysis & Retention Strategy | Python, Power BI | 2023
+- Analyzed behavioral patterns across 85,000 active customer accounts to isolate leading churn risk indicators and customer drop-off points.
+- Delivered executive presentation and retention dashboard that informed a targeted re-engagement campaign, boosting repeat customer retention by 14%.
+
+EDUCATION & CREDENTIALS
+Bachelor of Commerce (B.Com) in Business Analytics | Christ University, Bengaluru | 2023
+Google Professional Data Analytics Certificate | Coursera Verified | 2023
+Microsoft Certified: Power BI Data Analyst Associate (PL-300) | Microsoft | 2024
 
 SKILLS
-Excel, SQL, Data Analysis`;
+SQL, Data Analysis, Excel, Tableau, Power BI, Python, Business Intelligence, Forecasting, Reporting, KPI Tracking`;
 
   const SAMPLE_JOB = `Business Intelligence & Data Analyst
 Company: FinEdge Solutions
@@ -147,6 +161,7 @@ Key Responsibilities:
   };
 
   let lastStructuredResume = null;
+  let originalGeneratedResume = null;
   let lastLiveScore = 26;
 
   // DOM Elements
@@ -190,6 +205,7 @@ Key Responsibilities:
     const pro = isProUnlocked();
     const lockWrappers = [
       document.getElementById("coverLockWrapper"),
+      document.getElementById("linkedinLockWrapper"),
       document.getElementById("interviewLockWrapper"),
       document.getElementById("outreachLockWrapper")
     ];
@@ -269,9 +285,98 @@ Key Responsibilities:
     return { roleTitle, company };
   }
 
+  function scanResumeRedFlags(text) {
+    const container = document.getElementById("liveRedFlagsContainer");
+    if (!container) return;
+
+    if (!text || text.trim().length < 20) {
+      container.style.display = "none";
+      container.innerHTML = "";
+      return;
+    }
+
+    const flags = [];
+    const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+    // 1. Weak / passive opener verbs
+    const weakOpeners = [
+      { pattern: /\b(?:responsible for)\b/i, label: "Passive phrasing: 'Responsible for' detected (substitute with executive action verbs)" },
+      { pattern: /\b(?:assisted in|helped with)\b/i, label: "Subordinate verbs: 'Assisted in / Helped with' weakens your perceived authority" },
+      { pattern: /\b(?:worked on)\b/i, label: "Vague phrasing: 'Worked on' does not demonstrate project ownership or results" },
+      { pattern: /\b(?:duties included|in charge of)\b/i, label: "Task-list language: 'Duties included' reads like an assigned chore list rather than accomplishments" },
+      { pattern: /\b(?:handled)\b/i, label: "Low-impact action verb: 'Handled' minimizes candidate contribution" }
+    ];
+
+    weakOpeners.forEach((w) => {
+      if (w.pattern.test(text) && flags.length < 3) {
+        flags.push(w.label);
+      }
+    });
+
+    // 2. Metric / Quantification check
+    const bulletLines = lines.filter((l) => l.startsWith("-") || l.startsWith("•") || l.startsWith("*"));
+    const targetLines = bulletLines.length > 0 ? bulletLines : lines.slice(2);
+    const metricPattern = /\b\d+(?:[\.,]\d+)?%|\b\d+\b|\$\s*\d+|\b\d+x\b/i;
+    const linesWithMetrics = targetLines.filter((l) => metricPattern.test(l));
+    if (targetLines.length > 0 && (linesWithMetrics.length / targetLines.length) < 0.35) {
+      flags.push("Missing Quantified Results: Under 35% of bullets contain numbers, percentages (%), or measurable scale");
+    }
+
+    // 3. Buzzwords without evidence
+    const buzzwords = [
+      { pattern: /\b(?:team player)\b/i, label: "Unsubstantiated cliche: 'Team player' (substitute with cross-functional leadership)" },
+      { pattern: /\b(?:hard worker|hardworking)\b/i, label: "Unsubstantiated cliche: 'Hard worker' (use verified milestone deliverables instead)" },
+      { pattern: /\b(?:fast learner)\b/i, label: "Unsubstantiated cliche: 'Fast learner' (use rapid ramp-up milestones instead)" },
+      { pattern: /\b(?:go-getter|self-starter)\b/i, label: "Overused buzzword: 'Self-starter / Go-getter'" }
+    ];
+    buzzwords.forEach((b) => {
+      if (b.pattern.test(text) && flags.length < 5) {
+        flags.push(b.label);
+      }
+    });
+
+    // 4. Contact verification
+    const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(text);
+    const hasPhone = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\d{10}/.test(text);
+    if (!hasEmail) {
+      flags.push("Missing Email Address: ATS crawlers require a direct email format in header");
+    }
+    if (!hasPhone) {
+      flags.push("Missing Phone Number: Recruiter screening tools scan for valid phone format");
+    }
+
+    container.style.display = "block";
+
+    if (flags.length === 0) {
+      container.innerHTML = `
+        <div class="red-flags-header">
+          <h4 style="color:#065f46;">ATS Resume Health: Clean &amp; Strong</h4>
+          <span class="red-flags-badge" style="background:#d1fae5; color:#065f46; border-color:#a7f3d0;">No Critical Red Flags</span>
+        </div>
+        <p style="font-size:0.85rem; color:#065f46; margin:0;">Your resume uses strong action verbs and avoids common ATS disqualification triggers. RoleStride will align it to 96% match with your target role.</p>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="red-flags-header">
+        <h4>ATS &amp; Executive Red Flags Detected (${flags.length})</h4>
+        <span class="red-flags-badge">Real-Time Diagnostic</span>
+      </div>
+      <ul class="red-flags-list">
+        ${flags.map((f) => `<li><span>•</span> <span>${f}</span></li>`).join("")}
+      </ul>
+      <div class="red-flags-fix-banner">
+        RoleStride automatically resolves these in Step 2: converts weak verbs to executive past-tense action verbs, calculates measurable metric formulas, and maps exact keywords.
+      </div>
+    `;
+  }
+
   function updateLivePage1Match() {
     const rawResume = (resumeInput.value || "").trim();
     const rawJob = (jobInput.value || "").trim();
+
+    scanResumeRedFlags(rawResume);
 
     if (!rawResume || !rawJob) {
       liveScoreCircle.textContent = "0%";
@@ -341,24 +446,32 @@ Key Responsibilities:
 
     let currentSection = "header";
     const experienceEntries = [];
+    const projectEntries = [];
     const educationEntries = [];
     let currentExpEntry = null;
+    let currentProjEntry = null;
 
     for (let i = 2; i < lines.length; i++) {
       const line = lines[i];
-      if (/^(professional\s+summary|summary|profile|objective|about\s+me)$/i.test(line)) {
+      const cleanHeading = line.replace(/[^a-zA-Z\s]/g, " ").trim().toLowerCase();
+
+      if (/^(professional\s+)?summary\b|^profile\b|^objective\b|^about(\s+me)?\b/i.test(cleanHeading)) {
         currentSection = "summary";
         continue;
       }
-      if (/^(professional\s+experience|work\s+experience|experience|employment|work\s+history)$/i.test(line)) {
+      if (/^(professional\s+|work\s+)?experience\b|^employment\b|^work\s+history\b/i.test(cleanHeading)) {
         currentSection = "experience";
         continue;
       }
-      if (/^(education|academic|qualifications)$/i.test(line)) {
+      if (/^projects?\b|^key\s+projects?\b|^technical\s+projects?\b|^key\s+deliverables\b/i.test(cleanHeading)) {
+        currentSection = "projects";
+        continue;
+      }
+      if (/^education\b|^academic\b|^qualifications?\b|^credentials?\b|^certifications?\b/i.test(cleanHeading)) {
         currentSection = "education";
         continue;
       }
-      if (/^(skills|technical\s+skills|core\s+skills|competencies)$/i.test(line)) {
+      if (/^skills?\b|^technical\s+skills?\b|^core\s+competencies\b|^competencies\b|^technologies\b/i.test(cleanHeading)) {
         currentSection = "skills";
         continue;
       }
@@ -381,6 +494,25 @@ Key Responsibilities:
             experienceEntries.push(currentExpEntry);
           }
           currentExpEntry.bullets.push(polishBulletGrammar(line));
+        }
+      } else if (currentSection === "projects") {
+        if (!line.startsWith("-") && !line.startsWith("•") && (line.includes("|") || /\b20\d{2}\b/.test(line))) {
+          currentProjEntry = {
+            ...parseEntryHeader(line),
+            bullets: []
+          };
+          projectEntries.push(currentProjEntry);
+        } else {
+          if (!currentProjEntry) {
+            currentProjEntry = {
+              title: "Key Deliverables & Implementations",
+              org: "",
+              date: "",
+              bullets: []
+            };
+            projectEntries.push(currentProjEntry);
+          }
+          currentProjEntry.bullets.push(polishBulletGrammar(line));
         }
       } else if (currentSection === "education") {
         educationEntries.push(parseEntryHeader(line));
@@ -431,6 +563,7 @@ Key Responsibilities:
       technicalSkills,
       businessSkills,
       experienceEntries,
+      projectEntries,
       educationEntries,
       keyHighlights
     };
@@ -454,6 +587,26 @@ Key Responsibilities:
         `;
       })
       .join("");
+
+    const projHtml = (data.projectEntries && data.projectEntries.length > 0)
+      ? data.projectEntries
+          .map((proj) => {
+            const bulletsHtml = proj.bullets.map((b) => `<li>${b}</li>`).join("");
+            return `
+              <div class="exec-entry">
+                <div class="exec-entry-header">
+                  <div>
+                    <span class="exec-entry-title">${proj.title}</span>
+                    ${proj.org ? `<span class="exec-entry-org"> — ${proj.org}</span>` : ""}
+                  </div>
+                  <span class="exec-entry-date">${proj.date}</span>
+                </div>
+                <ul class="exec-bullets">${bulletsHtml}</ul>
+              </div>
+            `;
+          })
+          .join("")
+      : "";
 
     const eduHtml = data.educationEntries
       .map((edu) => `
@@ -501,13 +654,18 @@ Key Responsibilities:
         ${expHtml}
       </div>
 
+      ${projHtml ? `
+      <div class="exec-section">
+        <div class="exec-section-title">Key Projects &amp; Deliverables</div>
+        ${projHtml}
+      </div>` : `
       <div class="exec-section">
         <div class="exec-section-title">Key Impact &amp; Role Alignment</div>
         <ul class="exec-bullets">${highlightsHtml}</ul>
-      </div>
+      </div>`}
 
       <div class="exec-section" style="margin-bottom:0;">
-        <div class="exec-section-title">Education</div>
+        <div class="exec-section-title">Education &amp; Credentials</div>
         ${eduHtml}
       </div>
     `;
@@ -647,6 +805,109 @@ Key Responsibilities:
     });
   }
 
+  function populateLinkedInOptimizer(data) {
+    const container = document.getElementById("linkedinContainer");
+    if (!container) return;
+
+    const s1 = data.allFinalSkills[0] || "Data Analysis";
+    const s2 = data.allFinalSkills[1] || "SQL";
+    const s3 = data.allFinalSkills[2] || "Process Improvement";
+    const s4 = data.allFinalSkills[3] || "Stakeholder Management";
+    const s5 = data.allFinalSkills[4] || "Cross-Functional Execution";
+
+    const topSkillsList = data.allFinalSkills.slice(0, 5);
+
+    const headlines = [
+      {
+        title: "Headline Option 1: Metric & Impact Focused (Best for InMail Response)",
+        text: `${data.roleTitle} | Specializing in ${s1}, ${s2} & ${s3} | Streamlining Operations & Delivering Measurable Impact`
+      },
+      {
+        title: "Headline Option 2: Target Role & Domain SEO (Best for Recruiter Search Ranking)",
+        text: `${data.roleTitle} | ${s1} • ${s2} • ${s3} • ${s4} | Driving Data-Backed Execution`
+      },
+      {
+        title: "Headline Option 3: Executive Value-Add (Best for Senior & Leadership Visibility)",
+        text: `Strategic ${data.roleTitle} | Translating ${s1} & ${s2} into High-Value Business Insights & Process Optimization`
+      }
+    ];
+
+    const contactEmail = (data.contact && data.contact.split("•")[0]?.trim()) || "email";
+    const aboutStory = `I am a results-focused ${data.roleTitle} professional passionate about transforming complex business requirements into clear, measurable outcomes. With hands-on expertise spanning ${s1}, ${s2}, and ${s3}, I specialize in building reliable workflows and delivering data-driven solutions that accelerate team execution.
+
+Throughout my career, I have focused on closing the gap between strategy and execution—whether that means automating recurring reporting, eliminating operational bottlenecks, or partnering with cross-functional stakeholders to hit critical milestones. I take pride in combining technical discipline in ${s2} with structured ${s4} to ensure every deliverable creates lasting business value.
+
+I am particularly excited about opportunities with forward-thinking teams like ${data.company} where I can apply my foundation in ${s1} and ${s5} to solve meaningful challenges.
+
+Feel free to connect or reach out directly at ${contactEmail} to discuss industry insights or collaboration opportunities!`;
+
+    let html = "";
+
+    // 1. Headlines section
+    html += `<div class="qa-section-label">Part 1: 3 Recruiter SEO Headlines (&lt; 220 Chars)</div>`;
+    headlines.forEach((h, idx) => {
+      html += `
+        <div class="qa-card">
+          <div class="qa-card-top">
+            <h4 style="margin-bottom:0;">${h.title}</h4>
+            <button type="button" class="btn btn-primary btn-sm btn-copy-linkedin" data-copy-target="liHeadline_${idx}">
+              Copy Headline
+            </button>
+          </div>
+          <div class="qa-tip">Character count: ${h.text.length}/220. Ranks at the top of LinkedIn Recruiter searches for '${data.roleTitle}'.</div>
+          <p id="liHeadline_${idx}" style="font-weight:600; color:#111827;">${h.text}</p>
+        </div>
+      `;
+    });
+
+    // 2. Complete About story
+    html += `
+      <div class="qa-section-label" style="margin-top:16px;">Part 2: Complete 3-Paragraph "About" Story</div>
+      <div class="qa-card">
+        <div class="qa-card-top">
+          <h4 style="margin-bottom:0;">Ready-to-Paste Profile "About" Section</h4>
+          <button type="button" class="btn btn-primary btn-sm btn-copy-linkedin" data-copy-target="liAboutStory">
+            Copy About Section
+          </button>
+        </div>
+        <div class="qa-tip">Optimized for LinkedIn's 3-line preview hook. Encourages recruiters to click 'see more' and reach out.</div>
+        <p id="liAboutStory">${aboutStory}</p>
+      </div>
+    `;
+
+    // 3. Top 5 Skills to Pin
+    html += `
+      <div class="qa-section-label" style="margin-top:16px;">Part 3: Top 5 Core Skills to Pin on LinkedIn</div>
+      <div class="qa-card">
+        <div class="qa-card-top">
+          <h4 style="margin-bottom:0;">Pinned Profile Skills</h4>
+          <button type="button" class="btn btn-primary btn-sm btn-copy-linkedin" data-copy-target="liSkillsBadges">
+            Copy Skills
+          </button>
+        </div>
+        <div class="qa-tip">Pin these exact 5 skills in your LinkedIn 'Skills' section. Recruiters filter candidate pools by these keywords.</div>
+        <p id="liSkillsBadges" style="font-weight:600; color:#0f766e;">${topSkillsList.join("  •  ")}</p>
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+    container.querySelectorAll(".btn-copy-linkedin").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!isProUnlocked()) {
+          openProModal();
+          return;
+        }
+        const targetId = btn.getAttribute("data-copy-target");
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          navigator.clipboard.writeText(targetEl.textContent || "");
+          showToast("Copied to clipboard.");
+        }
+      });
+    });
+  }
+
   function handleAutoBuildResume() {
     const rawResume = (resumeInput.value || "").trim();
     const rawJob = (jobInput.value || "").trim();
@@ -659,8 +920,10 @@ Key Responsibilities:
     updateLivePage1Match();
     const data = buildTailoredResumeData(rawResume, rawJob);
     lastStructuredResume = data;
+    originalGeneratedResume = JSON.parse(JSON.stringify(data));
 
     renderFormattedResumeHTML(data);
+    populateLinkedInOptimizer(data);
     populateInterviewQuestions(data);
     populateRecruiterOutreach(data);
 
@@ -683,45 +946,215 @@ ${data.name}`;
     showScreen(2);
   }
 
+  function syncEditedResumeFromDOM() {
+    if (!formattedResumePaper || !formattedResumePaper.children.length) return null;
+
+    const nameEl = formattedResumePaper.querySelector(".exec-name");
+    const roleEl = formattedResumePaper.querySelector(".exec-role");
+    const contactEl = formattedResumePaper.querySelector(".exec-contact");
+    const summaryEl = formattedResumePaper.querySelector(".exec-summary");
+
+    const name = nameEl && nameEl.innerText.trim() ? nameEl.innerText.trim() : (lastStructuredResume && lastStructuredResume.name) || "CANDIDATE NAME";
+    const roleTitle = roleEl ? roleEl.innerText.trim() : "";
+    const contact = contactEl ? contactEl.innerText.trim() : "";
+
+    // If summaryEl exists, take its current text (which will be empty string if user deleted it!)
+    // If the entire summary section was deleted by the user, tailoredSummary is ""
+    let tailoredSummary = "";
+    if (summaryEl) {
+      tailoredSummary = summaryEl.innerText.trim();
+    }
+
+    const sections = Array.from(formattedResumePaper.querySelectorAll(".exec-section"));
+    let technicalSkills = [];
+    let businessSkills = [];
+    const experienceEntries = [];
+    const projectEntries = [];
+    const educationEntries = [];
+    const keyHighlights = [];
+
+    sections.forEach((sec) => {
+      const titleEl = sec.querySelector(".exec-section-title");
+      const titleText = titleEl ? titleEl.innerText.trim().toLowerCase() : sec.innerText.slice(0, 30).toLowerCase();
+
+      // If user deleted the summary element but left the section text
+      if (titleText.includes("summary")) {
+        const textNodes = sec.innerText.replace(titleEl ? titleEl.innerText : "", "").trim();
+        tailoredSummary = textNodes;
+      } else if (titleText.includes("competencies") || titleText.includes("skills")) {
+        const lines = Array.from(sec.querySelectorAll(".exec-skills-grid > div, p, div"));
+        lines.forEach((l) => {
+          const txt = l.innerText.trim();
+          if (txt.toLowerCase().includes("technical") || txt.toLowerCase().includes("domain")) {
+            const raw = txt.replace(/^[^:]*:\s*/, "");
+            technicalSkills = raw.split(/,\s*/).map((s) => s.trim()).filter(Boolean);
+          } else if (txt.toLowerCase().includes("management") || txt.toLowerCase().includes("methodologies")) {
+            const raw = txt.replace(/^[^:]*:\s*/, "");
+            businessSkills = raw.split(/,\s*/).map((s) => s.trim()).filter(Boolean);
+          }
+        });
+      } else if (titleText.includes("experience")) {
+        const entries = Array.from(sec.querySelectorAll(".exec-entry"));
+        entries.forEach((ent) => {
+          const titleSpan = ent.querySelector(".exec-entry-title");
+          const orgSpan = ent.querySelector(".exec-entry-org");
+          const dateSpan = ent.querySelector(".exec-entry-date");
+
+          const title = titleSpan ? titleSpan.innerText.trim() : "";
+          const org = orgSpan ? orgSpan.innerText.replace(/^[—–-]\s*/, "").trim() : "";
+          const date = dateSpan ? dateSpan.innerText.trim() : "";
+          const bullets = Array.from(ent.querySelectorAll("li")).map((li) => li.innerText.trim()).filter(Boolean);
+
+          if (title || bullets.length > 0) {
+            experienceEntries.push({ title, org, date, bullets });
+          }
+        });
+      } else if (titleText.includes("projects") || titleText.includes("deliverables")) {
+        const entries = Array.from(sec.querySelectorAll(".exec-entry"));
+        entries.forEach((ent) => {
+          const titleSpan = ent.querySelector(".exec-entry-title");
+          const orgSpan = ent.querySelector(".exec-entry-org");
+          const dateSpan = ent.querySelector(".exec-entry-date");
+
+          const title = titleSpan ? titleSpan.innerText.trim() : "";
+          const org = orgSpan ? orgSpan.innerText.replace(/^[—–-]\s*/, "").trim() : "";
+          const date = dateSpan ? dateSpan.innerText.trim() : "";
+          const bullets = Array.from(ent.querySelectorAll("li")).map((li) => li.innerText.trim()).filter(Boolean);
+
+          if (title || bullets.length > 0) {
+            projectEntries.push({ title, org, date, bullets });
+          }
+        });
+      } else if (titleText.includes("impact") || titleText.includes("alignment")) {
+        const bullets = Array.from(sec.querySelectorAll("li")).map((li) => li.innerText.trim()).filter(Boolean);
+        keyHighlights.push(...bullets);
+      } else if (titleText.includes("education") || titleText.includes("credentials")) {
+        const entries = Array.from(sec.querySelectorAll(".exec-entry-header"));
+        entries.forEach((ent) => {
+          const titleSpan = ent.querySelector(".exec-entry-title");
+          const orgSpan = ent.querySelector(".exec-entry-org");
+          const dateSpan = ent.querySelector(".exec-entry-date");
+
+          const title = titleSpan ? titleSpan.innerText.trim() : "";
+          const org = orgSpan ? orgSpan.innerText.replace(/^[—–-]\s*/, "").trim() : "";
+          const date = dateSpan ? dateSpan.innerText.trim() : "";
+
+          if (title || org) {
+            educationEntries.push({ title, org, date });
+          }
+        });
+      }
+    });
+
+    const allFinalSkills = [...technicalSkills, ...businessSkills];
+
+    const scrapedData = {
+      name,
+      roleTitle,
+      company: (lastStructuredResume && lastStructuredResume.company) || "Target Company",
+      contact,
+      tailoredSummary,
+      allFinalSkills,
+      addedSkills: (lastStructuredResume && lastStructuredResume.addedSkills) || [],
+      technicalSkills,
+      businessSkills,
+      experienceEntries,
+      projectEntries,
+      educationEntries,
+      keyHighlights
+    };
+
+    lastStructuredResume = scrapedData;
+    return scrapedData;
+  }
+
   function downloadDirectResumePdf() {
     if (!window.jspdf || !window.jspdf.jsPDF) {
       showToast("PDF library loading, please try again in 1 second.");
       return;
     }
 
+    // Sync any live edits made directly on the screen before generating the PDF!
+    const liveData = syncEditedResumeFromDOM();
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const centerX = pageWidth / 2;
-    const margin = 48;
+    const margin = 46;
     const contentWidth = pageWidth - margin * 2;
-    let y = 52;
 
-    const data = lastStructuredResume || buildTailoredResumeData(resumeInput.value || SAMPLE_RESUME, jobInput.value || SAMPLE_JOB);
+    const data = liveData || lastStructuredResume || buildTailoredResumeData(resumeInput.value || SAMPLE_RESUME, jobInput.value || SAMPLE_JOB);
 
+    // Calculate total elements to determine proportional Harvard vertical spacing
+    let totalBullets = 0;
+    (data.experienceEntries || []).forEach(e => totalBullets += (e.bullets || []).length);
+    (data.projectEntries || []).forEach(p => totalBullets += (p.bullets || []).length);
+    if (!data.projectEntries || data.projectEntries.length === 0) {
+      totalBullets += (data.keyHighlights || []).length;
+    }
+    const totalEntries = (data.experienceEntries || []).length + ((data.projectEntries && data.projectEntries.length) || 0);
+
+    // Proportional Harvard spacing calibrated to fill 90%+ of the single A4 page
+    let bulletLineHeight = 13.6;
+    let bulletGap = 3.5;
+    let entryGap = 8;
+    let sectionTopGap = 13;
+    let sectionBottomGap = 10;
+
+    if (totalBullets <= 7) {
+      // Light content: expand comfortably to prevent empty bottom void
+      bulletLineHeight = 15.0;
+      bulletGap = 5.5;
+      entryGap = 12;
+      sectionTopGap = 18;
+      sectionBottomGap = 13;
+    } else if (totalBullets <= 10) {
+      // Medium content: balanced filling
+      bulletLineHeight = 14.0;
+      bulletGap = 4.0;
+      entryGap = 9;
+      sectionTopGap = 15;
+      sectionBottomGap = 11;
+    } else if (totalBullets >= 14 || (totalBullets + totalEntries) >= 18) {
+      // Heavy content: condense slightly to guarantee single page
+      bulletLineHeight = 12.8;
+      bulletGap = 2.5;
+      entryGap = 5;
+      sectionTopGap = 9;
+      sectionBottomGap = 8;
+    }
+
+    let y = 46;
+
+    // 1. Header: Name & Role Title
     doc.setFont("times", "bold");
-    doc.setFontSize(20);
+    doc.setFontSize(21);
     doc.setTextColor(17, 24, 39);
     doc.text(data.name, centerX, y, { align: "center" });
-    y += 16;
+    y += 18;
 
-    doc.setFont("times", "bold");
-    doc.setFontSize(11.5);
-    doc.setTextColor(30, 58, 138);
-    doc.text(data.roleTitle.toUpperCase(), centerX, y, { align: "center" });
-    y += 14;
+    if (data.roleTitle && data.roleTitle.trim().length > 0) {
+      doc.setFont("times", "bold");
+      doc.setFontSize(11.5);
+      doc.setTextColor(30, 58, 138); // Classic executive navy
+      doc.text(data.roleTitle.toUpperCase(), centerX, y, { align: "center" });
+      y += 14;
+    }
 
-    doc.setFont("times", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(55, 65, 81);
-    doc.text(data.contact, centerX, y, { align: "center" });
-    y += 10;
+    if (data.contact && data.contact.trim().length > 0) {
+      doc.setFont("times", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(75, 85, 99);
+      doc.text(data.contact, centerX, y, { align: "center" });
+      y += 10;
+    }
 
     doc.setDrawColor(17, 24, 39);
     doc.setLineWidth(1.4);
     doc.line(margin, y, pageWidth - margin, y);
-    y += 18;
+    y += 15;
 
     function drawSectionHeader(title) {
       doc.setFont("times", "bold");
@@ -732,128 +1165,157 @@ ${data.name}`;
       doc.setDrawColor(156, 163, 175);
       doc.setLineWidth(0.6);
       doc.line(margin, y, pageWidth - margin, y);
-      y += 13;
+      y += sectionBottomGap;
     }
 
-    drawSectionHeader("Executive Summary");
-    doc.setFont("times", "normal");
-    doc.setFontSize(10.2);
-    doc.setTextColor(31, 41, 55);
-    const summaryLines = doc.splitTextToSize(data.tailoredSummary, contentWidth);
-    doc.text(summaryLines, margin, y);
-    y += summaryLines.length * 14 + 10;
-
-    drawSectionHeader("Core Competencies & Technical Skills");
-    doc.setFontSize(10);
-
-    if (data.technicalSkills.length > 0) {
-      const prefix = "Technical & Domain Skills: ";
-      doc.setFont("times", "bold");
-      doc.text(prefix, margin, y);
-      const prefixWidth = doc.getTextWidth(prefix);
-      doc.setFont("times", "normal");
-      const techWrap = doc.splitTextToSize(data.technicalSkills.join(", "), contentWidth - prefixWidth);
-      doc.text(techWrap, margin + prefixWidth, y);
-      y += techWrap.length * 14 + 3;
-    }
-
-    if (data.businessSkills.length > 0) {
-      const prefix = "Management & Methodologies: ";
-      doc.setFont("times", "bold");
-      doc.text(prefix, margin, y);
-      const prefixWidth = doc.getTextWidth(prefix);
-      doc.setFont("times", "normal");
-      const bizWrap = doc.splitTextToSize(data.businessSkills.join(", "), contentWidth - prefixWidth);
-      doc.text(bizWrap, margin + prefixWidth, y);
-      y += bizWrap.length * 14 + 3;
-    }
-    y += 8;
-
-    drawSectionHeader("Professional Experience");
-    data.experienceEntries.forEach((entry) => {
-      if (y > 720) {
-        doc.addPage();
-        y = 50;
-      }
-
-      doc.setFont("times", "bold");
-      doc.setFontSize(10.8);
-      doc.setTextColor(17, 24, 39);
-      const leftHeader = entry.org ? `${entry.title} — ${entry.org}` : entry.title;
-      doc.text(leftHeader, margin, y);
-
-      if (entry.date) {
-        doc.setFont("times", "bold");
-        doc.setFontSize(10);
-        doc.text(entry.date, pageWidth - margin, y, { align: "right" });
-      }
-      y += 14;
-
+    // 2. Executive Summary (Only drawn if NOT deleted by user)
+    if (data.tailoredSummary && data.tailoredSummary.trim().length > 0) {
+      drawSectionHeader("Executive Summary");
       doc.setFont("times", "normal");
       doc.setFontSize(10);
       doc.setTextColor(31, 41, 55);
-      entry.bullets.forEach((b) => {
-        if (y > 740) {
-          doc.addPage();
-          y = 50;
-        }
-        doc.text("•", margin + 4, y);
-        const wrapped = doc.splitTextToSize(b, contentWidth - 18);
-        doc.text(wrapped, margin + 16, y);
-        y += wrapped.length * 13.5 + 3;
-      });
-      y += 6;
-    });
-
-    if (y > 690) {
-      doc.addPage();
-      y = 50;
+      const summaryLines = doc.splitTextToSize(data.tailoredSummary.trim(), contentWidth);
+      doc.text(summaryLines, margin, y);
+      y += summaryLines.length * 14 + sectionTopGap;
     }
-    drawSectionHeader("Key Impact & Role Alignment");
-    doc.setFont("times", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(31, 41, 55);
-    data.keyHighlights.forEach((h) => {
-      doc.text("•", margin + 4, y);
-      const wrapped = doc.splitTextToSize(h, contentWidth - 18);
-      doc.text(wrapped, margin + 16, y);
-      y += wrapped.length * 13.5 + 4;
-    });
-    y += 6;
 
-    if (y > 730) {
-      doc.addPage();
-      y = 50;
-    }
-    drawSectionHeader("Education");
-    data.educationEntries.forEach((edu) => {
-      doc.setFont("times", "bold");
-      doc.setFontSize(10.3);
-      doc.setTextColor(17, 24, 39);
-      const leftEdu = edu.org ? `${edu.title} — ${edu.org}` : edu.title;
-      doc.text(leftEdu, margin, y);
+    // 3. Core Competencies & Technical Skills (Only drawn if NOT deleted)
+    if (data.technicalSkills.length > 0 || data.businessSkills.length > 0) {
+      drawSectionHeader("Core Competencies & Technical Skills");
+      doc.setFontSize(9.8);
 
-      if (edu.date) {
-        doc.text(edu.date, pageWidth - margin, y, { align: "right" });
+      if (data.technicalSkills.length > 0) {
+        const prefix = "Technical & Domain Skills: ";
+        doc.setFont("times", "bold");
+        doc.text(prefix, margin, y);
+        const prefixWidth = doc.getTextWidth(prefix);
+        doc.setFont("times", "normal");
+        const techWrap = doc.splitTextToSize(data.technicalSkills.join(", "), contentWidth - prefixWidth);
+        doc.text(techWrap, margin + prefixWidth, y);
+        y += techWrap.length * 14 + 3;
       }
-      y += 16;
-    });
 
+      if (data.businessSkills.length > 0) {
+        const prefix = "Management & Methodologies: ";
+        doc.setFont("times", "bold");
+        doc.text(prefix, margin, y);
+        const prefixWidth = doc.getTextWidth(prefix);
+        doc.setFont("times", "normal");
+        const bizWrap = doc.splitTextToSize(data.businessSkills.join(", "), contentWidth - prefixWidth);
+        doc.text(bizWrap, margin + prefixWidth, y);
+        y += bizWrap.length * 14 + 3;
+      }
+      y += sectionTopGap;
+    }
+
+    // 4. Professional Experience (Only drawn if NOT deleted)
+    if (data.experienceEntries && data.experienceEntries.length > 0) {
+      drawSectionHeader("Professional Experience");
+      data.experienceEntries.forEach((entry) => {
+        doc.setFont("times", "bold");
+        doc.setFontSize(10.5);
+        doc.setTextColor(17, 24, 39);
+        const leftHeader = entry.org ? `${entry.title} — ${entry.org}` : entry.title;
+        doc.text(leftHeader, margin, y);
+
+        if (entry.date) {
+          doc.setFont("times", "bold");
+          doc.setFontSize(9.8);
+          doc.text(entry.date, pageWidth - margin, y, { align: "right" });
+        }
+        y += 14;
+
+        doc.setFont("times", "normal");
+        doc.setFontSize(9.8);
+        doc.setTextColor(31, 41, 55);
+        entry.bullets.forEach((b) => {
+          doc.text("•", margin + 4, y);
+          const wrapped = doc.splitTextToSize(b, contentWidth - 18);
+          doc.text(wrapped, margin + 16, y);
+          y += wrapped.length * bulletLineHeight + bulletGap;
+        });
+        y += entryGap;
+      });
+    }
+
+    // 5. Key Projects & Technical Deliverables (Only drawn if present)
+    if (data.projectEntries && data.projectEntries.length > 0) {
+      drawSectionHeader("Key Projects & Technical Deliverables");
+      data.projectEntries.forEach((proj) => {
+        doc.setFont("times", "bold");
+        doc.setFontSize(10.2);
+        doc.setTextColor(17, 24, 39);
+        const leftProj = proj.org ? `${proj.title} — ${proj.org}` : proj.title;
+        doc.text(leftProj, margin, y);
+
+        if (proj.date) {
+          doc.setFont("times", "bold");
+          doc.setFontSize(9.5);
+          doc.text(proj.date, pageWidth - margin, y, { align: "right" });
+        }
+        y += 13;
+
+        doc.setFont("times", "normal");
+        doc.setFontSize(9.5);
+        doc.setTextColor(31, 41, 55);
+        proj.bullets.forEach((b) => {
+          doc.text("•", margin + 4, y);
+          const wrapped = doc.splitTextToSize(b, contentWidth - 18);
+          doc.text(wrapped, margin + 16, y);
+          y += wrapped.length * bulletLineHeight + bulletGap;
+        });
+        y += Math.max(4, entryGap - 2);
+      });
+      y += sectionTopGap - 2;
+    } else if (data.keyHighlights && data.keyHighlights.length > 0) {
+      drawSectionHeader("Key Impact & Role Alignment");
+      doc.setFont("times", "normal");
+      doc.setFontSize(9.8);
+      doc.setTextColor(31, 41, 55);
+      data.keyHighlights.forEach((h) => {
+        doc.text("•", margin + 4, y);
+        const wrapped = doc.splitTextToSize(h, contentWidth - 18);
+        doc.text(wrapped, margin + 16, y);
+        y += wrapped.length * bulletLineHeight + bulletGap;
+      });
+      y += sectionTopGap;
+    }
+
+    // 6. Education & Credentials (Only drawn if NOT deleted)
+    if (data.educationEntries && data.educationEntries.length > 0) {
+      drawSectionHeader("Education & Credentials");
+      data.educationEntries.forEach((edu) => {
+        doc.setFont("times", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(17, 24, 39);
+        const leftEdu = edu.org ? `${edu.title} — ${edu.org}` : edu.title;
+        doc.text(leftEdu, margin, y);
+
+        if (edu.date) {
+          doc.setFont("times", "bold");
+          doc.setFontSize(9.5);
+          doc.text(edu.date, pageWidth - margin, y, { align: "right" });
+        }
+        y += 14;
+      });
+    }
+
+    // Watermark footer on single page
     if (!isProUnlocked()) {
       doc.setFont("helvetica", "italic");
-      doc.setFontSize(8.5);
+      doc.setFontSize(8);
       doc.setTextColor(156, 163, 175);
       doc.text(
         "Generated with RoleStride Free Plan — Upgrade to Pro ($15) for watermark-free PDFs",
         centerX,
-        pageHeight - 22,
+        pageHeight - 24,
         { align: "center" }
       );
     }
 
     const cleanFileName = data.name.replace(/[^a-z0-9]/gi, "_").toLowerCase() || "executive";
     doc.save(`${cleanFileName}_resume.pdf`);
-    showToast("Resume PDF downloaded.");
+    showToast("✓ Executive Harvard Resume PDF downloaded!");
   }
 
   function downloadDirectCoverPdf() {
@@ -989,6 +1451,16 @@ ${data.name}`;
     document.getElementById("btnAutoBuildResume").addEventListener("click", handleAutoBuildResume);
     document.getElementById("btnBackToEdit").addEventListener("click", () => showScreen(1));
 
+    const btnResetResumeEdits = document.getElementById("btnResetResumeEdits");
+    if (btnResetResumeEdits) {
+      btnResetResumeEdits.addEventListener("click", () => {
+        if (!originalGeneratedResume) return;
+        lastStructuredResume = JSON.parse(JSON.stringify(originalGeneratedResume));
+        renderFormattedResumeHTML(lastStructuredResume);
+        showToast("Reverted to original AI generated resume.");
+      });
+    }
+
     document.getElementById("btnDownloadDirectPdf").addEventListener("click", downloadDirectResumePdf);
     document.getElementById("btnDownloadCoverPdf").addEventListener("click", downloadDirectCoverPdf);
     const btnDownloadInterviewPdf = document.getElementById("btnDownloadInterviewPdf");
@@ -1061,12 +1533,17 @@ ${data.name}`;
     const btnLoadSampleDemo = document.getElementById("btnLoadSampleDemo");
     if (btnLoadSampleDemo) {
       btnLoadSampleDemo.addEventListener("click", () => {
-        resumeInput.value = SAMPLE_RESUME;
-        jobInput.value = SAMPLE_JOB;
-        updateLivePage1Match();
-        showToast("Loaded sample resume & job description.");
+        applySuggestionPreset("analyst");
       });
     }
+
+    // 1-Click Role Suggestion Chips
+    document.querySelectorAll(".suggestion-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const presetKey = chip.getAttribute("data-preset") || "analyst";
+        applySuggestionPreset(presetKey);
+      });
+    });
 
     // Top-right button: Opens Pro modal
     btnOpenProModal.addEventListener("click", () => {
@@ -1080,11 +1557,128 @@ ${data.name}`;
     });
   }
 
+  const PRESETS = {
+    analyst: {
+      label: "Data & BI Analyst",
+      resume: SAMPLE_RESUME,
+      job: SAMPLE_JOB
+    },
+    manager: {
+      label: "Project & Operations Manager",
+      resume: `AMIT VERMA
+amit.verma@email.com | +91 98765 12345 | Delhi NCR, India | linkedin.com/in/amit-verma-pm
+
+PROFESSIONAL SUMMARY
+Results-driven Project and Operations Manager with 4+ years of experience leading cross-functional teams, optimizing project delivery pipelines, and driving Agile sprint execution. Proven track record of managing $1.8M budget portfolios and cutting operational turnaround times by 28%.
+
+PROFESSIONAL EXPERIENCE
+Project Operations Lead | Nexa Enterprise Systems | 2023 – Present
+- Directed cross-functional engineering and operations teams of 14 across 6 concurrent client software delivery milestones.
+- Implemented Agile Scrum frameworks and Jira sprint workflows, reducing sprint cycle bottlenecks by 32%.
+- Managed $1.8M annual operational project budgets, tracking expenditure forecasts and vendor SLA performance.
+- Spearheaded executive stakeholder reporting, presenting weekly risk-mitigation and KPI dashboards to C-suite leadership.
+
+Operations Associate | Global Logistics Hub | 2021 – 2023
+- Coordinated multi-region supply chain dispatch workflows handling 450+ daily high-priority shipments.
+- Streamlined vendor communication protocols, resolving compliance and shipping escalations within 4-hour SLAs.
+- Analyzed operational delay metrics in Excel to design standardized handoff guidelines adopted across 3 distribution hubs.
+
+KEY PROJECTS & TECHNICAL DELIVERABLES
+Agile Workflow Modernization & Tool Migration | Jira, Confluence, Scrum | 2023
+- Led migration of 8 department workflows to centralized Jira tracking, improving team velocity visibility by 40%.
+- Conducted 12 Agile alignment workshops training 60+ team members on backlog grooming and sprint estimation.
+
+Vendor SLA Optimization & Cost Reduction Initiative | Process Improvement | 2022
+- Audited 18 third-party vendor contracts to identify billing discrepancies, saving $45,000 in annualized service fees.
+
+EDUCATION & CREDENTIALS
+Bachelor of Business Administration (BBA) | Delhi University | 2021
+Project Management Professional (PMP) Training Certified | PMI Chapter | 2023
+Certified ScrumMaster (CSM) | Scrum Alliance | 2022
+
+SKILLS
+Project Management, Agile, Scrum, Jira, Stakeholder Management, Process Improvement, Budget Management, Risk Management, Operations Management, KPI Tracking`,
+      job: `Project Manager — Enterprise Operations
+Company: Apex Global Technologies
+
+About the Role:
+We are seeking an experienced Project Manager to lead enterprise software delivery initiatives and cross-functional operations.
+
+Key Responsibilities:
+- Lead Agile sprint planning, daily standups, and retrospective ceremonies using Jira and Scrum methodologies.
+- Drive Stakeholder Management and communicate project milestones, risks, and KPIs to leadership.
+- Oversee Budget Management, vendor relationships, and Process Improvement initiatives across departments.
+- Ensure Quality Assurance, Risk Management, and compliance with corporate delivery standards.`
+    },
+    developer: {
+      label: "Software & Web Developer",
+      resume: `ROHAN MEHTA
+rohan.mehta@email.com | +91 98111 22334 | Pune, India | github.com/rohan-dev | linkedin.com/in/rohanmehta-dev
+
+PROFESSIONAL SUMMARY
+Full-Stack Software Engineer with 3+ years of experience engineering high-performance web applications, RESTful APIs, and scalable cloud architectures. Proficient in JavaScript, TypeScript, React, Node.js, SQL, and Docker, with a commitment to clean code, test-driven development, and 99.9% uptime reliability.
+
+PROFESSIONAL EXPERIENCE
+Software Engineer | CloudScale Technologies | 2023 – Present
+- Architected and built responsive web applications using React, TypeScript, and Node.js serving 120,000+ monthly active users.
+- Designed and optimized high-throughput PostgreSQL and SQL database queries, reducing average API response times by 45%.
+- Implemented automated CI/CD deployment pipelines using Docker, Git, and AWS, cutting production deployment time by 60%.
+- Collaborated cross-functionally with UI/UX product designers in Figma to build accessible, mobile-responsive interfaces.
+
+Junior Developer | TechSprint Solutions | 2022 – 2023
+- Developed REST API microservices in Node.js and Express to process customer authentication and billing workflows.
+- Wrote automated unit and integration tests using Jest, maintaining 88% test coverage across core application modules.
+- Refactored legacy frontend code into modular reusable React components, improving page load speeds by 28%.
+
+KEY PROJECTS & TECHNICAL DELIVERABLES
+High-Throughput Analytics Dashboard | React, TypeScript, Node.js, SQL | 2024
+- Engineered an interactive customer analytics dashboard rendering real-time data visualizations for 50,000+ daily events.
+- Implemented Redis caching layers to optimize heavy database aggregations, improving query speeds by 3.5x.
+
+Microservices Authentication Engine | Node.js, Docker, AWS | 2023
+- Built an isolated JWT authentication service handling token generation, rate limiting, and role-based permissions.
+
+EDUCATION & CREDENTIALS
+B.Tech in Computer Science & Engineering | Pune University | 2022
+AWS Certified Solutions Architect — Associate | Amazon Web Services | 2023
+
+SKILLS
+JavaScript, TypeScript, React, Node.js, SQL, PostgreSQL, REST API, Docker, AWS, Git, CI/CD, HTML, CSS, Next.js`,
+      job: `Full-Stack Software Engineer
+Company: CloudNative Labs
+
+About the Role:
+We are looking for a Full-Stack Software Engineer to build scalable web applications and cloud-native microservices.
+
+Key Responsibilities:
+- Build high-performance frontend interfaces using React, TypeScript, Next.js, and modern CSS frameworks.
+- Design resilient backend services, REST APIs, and database schemas using Node.js, SQL, PostgreSQL, and Docker.
+- Implement CI/CD pipelines, Git workflows, and cloud deployments on AWS.
+- Collaborate with agile product teams to ensure high code quality, system design standards, and fast delivery cycles.`
+    }
+  };
+
+  function applySuggestionPreset(presetKey) {
+    const preset = PRESETS[presetKey] || PRESETS.analyst;
+    resumeInput.value = preset.resume;
+    jobInput.value = preset.job;
+
+    document.querySelectorAll(".suggestion-chip").forEach((c) => {
+      if (c.getAttribute("data-preset") === presetKey) {
+        c.classList.add("active");
+      } else {
+        c.classList.remove("active");
+      }
+    });
+
+    updateLivePage1Match();
+    showToast(`Loaded "${preset.label}" suggestion`);
+  }
+
   checkAutoUrlUnlock();
   updateProStatusUI();
   bindEvents();
-  resumeInput.value = "";
-  jobInput.value = "";
-  updateLivePage1Match();
+  // Pre-load default suggestion so the page is NEVER empty or blank
+  applySuggestionPreset("analyst");
   window.history.replaceState({ screen: 1 }, "");
 })();

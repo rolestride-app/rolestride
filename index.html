@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoleStride — Tailored Resume & Executive Career Kit</title>
   <meta name="description" content="Match your resume to any job description and download a clean Executive PDF resume." />
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2.0.1" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -36,7 +37,15 @@
     <section class="step-screen active" id="screenStep1">
       <div class="screen-header">
         <h2>Tailor Your Resume for Any Job</h2>
-        <p>Paste your current resume and the job description below. We will add missing job skills and format your executive PDF in one click.</p>
+        <p>Paste your current resume and the job description below, or pick a preset suggestion to see how it works instantly.</p>
+      </div>
+
+      <!-- 1-Click Role Suggestions & Demo Presets (Never Blank!) -->
+      <div class="suggestion-bar">
+        <span class="suggestion-label">💡 Try a 1-Click Suggestion:</span>
+        <button type="button" class="suggestion-chip active" data-preset="analyst">📊 Data &amp; BI Analyst</button>
+        <button type="button" class="suggestion-chip" data-preset="manager">💼 Project &amp; Operations Manager</button>
+        <button type="button" class="suggestion-chip" data-preset="developer">💻 Software &amp; Web Developer</button>
       </div>
 
       <div class="input-grid">
@@ -45,14 +54,14 @@
           <div class="field-top">
             <label for="resumeInput">1. Your Current Resume</label>
             <div style="display:flex; gap:12px; align-items:center;">
-              <button type="button" id="btnLoadSampleDemo" class="text-link">Load sample demo</button>
+              <button type="button" id="btnLoadSampleDemo" class="text-link" style="font-weight:700; color:#1e3a8a;">⚡ Load sample demo</button>
               <label class="text-link">
                 Upload .txt file
                 <input type="file" id="resumeFileUpload" accept=".txt,.md" style="display:none;" />
               </label>
             </div>
           </div>
-          <textarea id="resumeInput" placeholder="Paste your current resume text here..."></textarea>
+          <textarea id="resumeInput" placeholder="Paste your current resume text here (or click '⚡ Load sample demo' above to test immediately)..."></textarea>
         </div>
 
         <!-- Box 2: Target Job Post -->
@@ -61,7 +70,7 @@
             <label for="jobInput">2. Job Description</label>
             <button type="button" id="btnClearInputs" class="text-link">Clear both</button>
           </div>
-          <textarea id="jobInput" placeholder="Paste the job description from LinkedIn, Naukri, or Indeed here..."></textarea>
+          <textarea id="jobInput" placeholder="Paste the target job description from LinkedIn, Indeed, or Naukri here..."></textarea>
         </div>
       </div>
 
@@ -79,6 +88,9 @@
           Build My Tailored Resume
         </button>
       </div>
+
+      <!-- Real-Time ATS Red Flag Diagnostic -->
+      <div id="liveRedFlagsContainer" class="red-flags-card" style="display:none;"></div>
     </section>
 
     <!-- ====================================================================
@@ -96,16 +108,22 @@
           <span id="autoBannerTitle" style="font-size:0.9rem; font-weight:600;">Tailored for Target Role</span>
         </div>
 
-        <button type="button" id="btnDownloadDirectPdf" class="btn btn-emerald">
-          Download Resume PDF
-        </button>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button type="button" id="btnResetResumeEdits" class="btn btn-secondary btn-sm" title="Revert to original AI generated resume">
+            🔄 Reset Edits
+          </button>
+          <button type="button" id="btnDownloadDirectPdf" class="btn btn-emerald">
+            Download Resume PDF
+          </button>
+        </div>
       </div>
 
-      <!-- Clean 4-Tab Switcher -->
+      <!-- Clean 5-Tab Switcher -->
       <div class="doc-toolbar">
         <div class="doc-tabs">
           <button type="button" class="doc-tab-btn active" data-doc="docResumePane">Tailored Resume</button>
           <button type="button" class="doc-tab-btn" data-doc="docCoverPane">Cover Letter</button>
+          <button type="button" class="doc-tab-btn" data-doc="docLinkedInPane">LinkedIn Optimizer</button>
           <button type="button" class="doc-tab-btn" data-doc="docInterviewPane">Interview Playbook (10 Q&amp;A)</button>
           <button type="button" class="doc-tab-btn" data-doc="docOutreachPane">Recruiter Outreach</button>
         </div>
@@ -113,6 +131,11 @@
 
       <!-- TAB 1: TAILORED RESUME -->
       <div id="docResumePane" class="doc-pane active">
+        <!-- Live Edit Alert Bar -->
+        <div class="edit-hint-bar">
+          <span>✏️ <strong>Live Editable:</strong> Click anywhere on the resume below to edit text, dates, or bullet points directly. Your changes are automatically saved into your PDF!</span>
+        </div>
+
         <div id="freeWatermarkNotice" class="watermark-bar">
           <span>Free Plan: Downloaded PDF includes a small footer note.</span>
           <button type="button" class="btn btn-primary btn-sm" id="btnRemoveWatermark">Unlock Clean PDF &amp; Full Pro ($15)</button>
@@ -127,7 +150,7 @@
           <div class="pro-lock-overlay">
             <div class="lock-card">
               <h3>Unlock Your Tailored Cover Letter</h3>
-              <p>Upgrade to Pro for a one-time $15 payment to unlock your custom Cover Letter, 10-Question Interview Playbook, Recruiter Outreach Scripts, and clean Resume PDFs.</p>
+              <p>Upgrade to Pro for a one-time $15 payment to unlock your custom Cover Letter, 10-Question Interview Playbook, LinkedIn Profile Optimizer, and clean Resume PDFs.</p>
               <button type="button" class="btn btn-emerald btn-OpenProTrigger" style="width:100%;">
                 Unlock Pro — $15 One-Time
               </button>
@@ -141,7 +164,29 @@
         </div>
       </div>
 
-      <!-- TAB 3: 10-QUESTION INTERVIEW PLAYBOOK -->
+      <!-- TAB 3: LINKEDIN PROFILE OPTIMIZER -->
+      <div id="docLinkedInPane" class="doc-pane">
+        <div class="pro-lock-wrapper" id="linkedinLockWrapper">
+          <div class="pro-lock-overlay">
+            <div class="lock-card">
+              <h3>Unlock LinkedIn Profile Optimizer</h3>
+              <p>Get 3 recruiter-ranking headlines, a complete 3-paragraph "About" summary, and top skill badges to pin on your profile.</p>
+              <button type="button" class="btn btn-emerald btn-OpenProTrigger" style="width:100%;">
+                Unlock Pro — $15 One-Time
+              </button>
+            </div>
+          </div>
+          <div class="pane-action-header">
+            <div>
+              <h4 style="font-size:0.95rem; font-weight:700;">LinkedIn SEO &amp; Recruiter Profile Optimizer</h4>
+              <p style="font-size:0.82rem; color:var(--text-secondary);">Rank higher in LinkedIn Recruiter searches for this role.</p>
+            </div>
+          </div>
+          <div id="linkedinContainer" class="qa-list-container"></div>
+        </div>
+      </div>
+
+      <!-- TAB 4: 10-QUESTION INTERVIEW PLAYBOOK -->
       <div id="docInterviewPane" class="doc-pane">
         <div class="pro-lock-wrapper" id="interviewLockWrapper">
           <div class="pro-lock-overlay">
@@ -166,7 +211,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: RECRUITER & HIRING MANAGER OUTREACH -->
+      <!-- TAB 5: RECRUITER & HIRING MANAGER OUTREACH -->
       <div id="docOutreachPane" class="doc-pane">
         <div class="pro-lock-wrapper" id="outreachLockWrapper">
           <div class="pro-lock-overlay">
@@ -228,6 +273,7 @@
       <ul class="pro-feature-list">
         <li>• <strong>Clean, Watermark-Free Executive Resume PDFs</strong></li>
         <li>• <strong>Tailored Cover Letter Generator &amp; PDF Download</strong></li>
+        <li>• <strong>LinkedIn SEO Profile Optimizer (3 Headlines &amp; "About" Story)</strong></li>
         <li>• <strong>10-Question Interview Playbook + Printable PDF Guide</strong></li>
         <li>• <strong>Salary Negotiation &amp; 60-Second Elevator Pitch Scripts</strong></li>
         <li>• <strong>LinkedIn &amp; Hiring Manager Cold Outreach Emails</strong></li>
@@ -246,7 +292,7 @@
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script src="config.js?v=2.0.1"></script>
+  <script src="app.js?v=2.0.1"></script>
 </body>
 </html>

@@ -170,6 +170,52 @@ body {
   color: var(--text-secondary);
 }
 
+/* 1-Click Role Suggestions Bar */
+.suggestion-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.suggestion-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.suggestion-chip {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.suggestion-chip:hover {
+  background: #ecfdf5;
+  border-color: #0f766e;
+  color: #0f766e;
+}
+
+.suggestion-chip.active {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #ffffff;
+}
+
 /* Input Grid */
 .input-grid {
   display: grid;
@@ -283,6 +329,68 @@ textarea {
   color: var(--text-secondary);
 }
 
+/* ATS Red Flag Diagnostic Card on Screen 1 */
+.red-flags-card {
+  margin-top: 16px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+}
+
+.red-flags-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.red-flags-header h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.red-flags-badge {
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #fcd34d;
+}
+
+.red-flags-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: #78350f;
+  margin-bottom: 12px;
+}
+
+.red-flags-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.red-flags-fix-banner {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 /* Page 2 Top Summary Bar */
 .result-top-bar {
   display: flex;
@@ -355,6 +463,24 @@ textarea {
 }
 
 /* Subtle Watermark Notice */
+.edit-hint-bar {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  color: #166534;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.formatted-resume-paper[contenteditable="true"]:focus {
+  outline: 2px solid #0f766e;
+  outline-offset: 4px;
+}
+
 .watermark-bar {
   background: var(--bg-subtle);
   border: 1px solid var(--border-light);
