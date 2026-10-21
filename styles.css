@@ -530,8 +530,8 @@ textarea {
 .pro-lock-wrapper.locked .qa-list-container,
 .pro-lock-wrapper.locked .edit-hint-bar,
 .pro-lock-wrapper.locked .pane-actions-footer {
-  filter: blur(9px);
-  opacity: 0.32;
+  filter: blur(16px);
+  opacity: 0.08;
   pointer-events: none;
   user-select: none;
   transition: filter 0.2s ease, opacity 0.2s ease;
@@ -545,14 +545,27 @@ textarea {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(248, 250, 252, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-radius: var(--radius-md);
 }
 
 .pro-lock-wrapper.locked .pro-lock-overlay {
   display: flex;
+}
+
+.lock-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 1.3rem;
+  margin-bottom: 12px;
 }
 
 .lock-card {
