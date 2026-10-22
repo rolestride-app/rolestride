@@ -1592,6 +1592,37 @@ textarea {
   margin: 0;
 }
 
+.trust-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.trust-card-list li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  position: relative;
+  padding-left: 14px;
+}
+
+.trust-card-list li::before {
+  content: "•";
+  color: #0f766e;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  font-size: 0.9rem;
+}
+
+.trust-card-list li strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
 .trust-footer-note {
   text-align: center;
   font-size: 0.82rem;
