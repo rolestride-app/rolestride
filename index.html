@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoleStride — AI Executive Resume Builder & Career Kit</title>
   <meta name="description" content="Match your resume to any job description in 30 seconds. Download clean, 1-page Harvard-standard PDF resumes with tailored cover letters and interview playbooks. 100% private in your browser." />
-  <meta name="robots" content="index, follow" />
+  <meta name="keywords" content="ATS resume builder, AI resume tailor, executive resume PDF, Harvard resume format, ATS keyword matcher, cover letter generator, interview playbook, recruiter outreach templates, free resume scanner, private resume builder" />
+  <meta name="author" content="RoleStride" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <link rel="canonical" href="https://rolestride-app.github.io/rolestride/" />
 
   <!-- Favicon -->
@@ -13,15 +16,102 @@
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RoleStride" />
   <meta property="og:url" content="https://rolestride-app.github.io/rolestride/" />
   <meta property="og:title" content="RoleStride — Executive Resume Builder & Career Kit" />
   <meta property="og:description" content="Tailor your resume to any job description in 30 seconds. Single-page Harvard standard, 100% private in your browser." />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="RoleStride — AI Executive Resume Builder & Career Kit" />
+  <meta name="twitter:description" content="Tailor your resume to any job description in 30 seconds. Single-page Harvard standard, 100% private in your browser." />
+
+  <!-- JSON-LD Structured Data for Google, Bing & AI Engines (ChatGPT, Perplexity, Copilot) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://rolestride-app.github.io/rolestride/#webapp",
+        "name": "RoleStride",
+        "url": "https://rolestride-app.github.io/rolestride/",
+        "description": "Privacy-first ATS resume builder and AI career suite. Match resumes to job descriptions in 30 seconds and download 1-page Harvard-standard executive PDFs.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All (Web Browser)",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Free Tier",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "name": "RoleStride Pro Lifetime Access",
+            "price": "15",
+            "priceCurrency": "USD",
+            "url": "https://rolestride.gumroad.com/l/pro"
+          }
+        ],
+        "featureList": [
+          "ATS Keyword Match Score Diagnostic",
+          "Harvard 1-Page Executive Resume Formatter",
+          "Targeted Cover Letter Generator",
+          "LinkedIn Recruiter SEO Optimizer",
+          "10-Question STAR Interview Playbook",
+          "Recruiter & Hiring Manager Outreach Scripts",
+          "100% Private Client-Side Browser Processing"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://rolestride-app.github.io/rolestride/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is RoleStride?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RoleStride is a privacy-first ATS resume builder and career launch kit that tailors your resume to match any job description in 30 seconds and exports clean, 1-page Harvard-standard executive PDFs."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is RoleStride ATS-friendly?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. RoleStride formats resumes strictly adhering to standard ATS (Applicant Tracking System) rules: single-column layout, standard headers, clean typography, quantified bullet points, and high-signal keyword matching."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my resume data private and secure?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "100% private. RoleStride processes and renders your resume directly inside your local web browser. Your resume, job descriptions, and personal details are never stored on external databases or used to train public models."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does RoleStride prepare me for interviews?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RoleStride generates a tailored 10-Question Interview Playbook with role-specific STAR-method sample answers, 60-second elevator pitches, and salary negotiation frameworks."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 
   <!-- Fonts & Libraries -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3.10.0" />
+  <link rel="stylesheet" href="styles.css?v=3.11.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -379,7 +469,7 @@
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js?v=3.10.0"></script>
-  <script src="app.js?v=3.10.0"></script>
+  <script src="config.js?v=3.11.0"></script>
+  <script src="app.js?v=3.11.0"></script>
 </body>
 </html>
