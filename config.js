@@ -16,7 +16,7 @@ window.ROLEPULSE_CONFIG = {
   // --------------------------------------------------------------------------
   // 1. Gumroad Pro Checkout Link (Create a free account at gumroad.com, create a
   //    $15 product, and paste your product URL below)
-  gumroadProUrl: "https://rolestride.gumroad.com/l/rolestride",
+  gumroadProUrl: "https://rolestride.gumroad.com/l/pro",
 
   // 2. Free Support / Tip Jar Link (Optional: BuyMeACoffee, Ko-fi, or Payhip)
   supportDonateUrl: "https://buymeacoffee.com",
