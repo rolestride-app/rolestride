@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3.7.0" />
+  <link rel="stylesheet" href="styles.css?v=3.9.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -58,14 +58,14 @@
         <div class="field-card">
           <div class="field-top">
             <label for="resumeInput">1. Your Current Resume</label>
-            <div class="field-actions">
-              <button type="button" id="btnLoadSampleDemo" class="text-link" style="font-weight:600; color:#0f766e;">Load Sample</button>
-              <label class="text-link">
-                Upload Resume (.pdf / .txt)
-                <input type="file" id="resumeFileUpload" accept=".pdf,.txt,.md" style="display:none;" />
-              </label>
-              <button type="button" id="btnClearResume" class="text-link">Clear</button>
-            </div>
+            <button type="button" id="btnClearResume" class="text-clear-btn">Clear</button>
+          </div>
+          <div class="field-toolbar">
+            <button type="button" id="btnLoadSampleDemo" class="text-link" style="font-weight:600; color:#0f766e;">Load Sample</button>
+            <label class="text-link" style="font-weight:600; color:#0f766e;">
+              Upload Resume (.pdf / .txt)
+              <input type="file" id="resumeFileUpload" accept=".pdf,.txt,.md" style="display:none;" />
+            </label>
           </div>
           <textarea id="resumeInput" placeholder="Paste your current resume text here (or click 'Upload Resume' / 'Load Sample' above)..."></textarea>
         </div>
@@ -74,10 +74,10 @@
         <div class="field-card">
           <div class="field-top">
             <label for="jobInput">2. Job Description</label>
-            <div class="field-actions">
-              <button type="button" id="btnLoadSampleJob" class="text-link" style="font-weight:600; color:#0f766e;">Load Sample Job</button>
-              <button type="button" id="btnClearJob" class="text-link">Clear</button>
-            </div>
+            <button type="button" id="btnClearJob" class="text-clear-btn">Clear</button>
+          </div>
+          <div class="field-toolbar">
+            <button type="button" id="btnLoadSampleJob" class="text-link" style="font-weight:600; color:#0f766e;">Load Sample Job</button>
           </div>
           <textarea id="jobInput" placeholder="Paste the target job description from LinkedIn, Indeed, or Naukri here..."></textarea>
         </div>
@@ -379,7 +379,7 @@
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js?v=3.7.0"></script>
-  <script src="app.js?v=3.7.0"></script>
+  <script src="config.js?v=3.9.0"></script>
+  <script src="app.js?v=3.9.0"></script>
 </body>
 </html>

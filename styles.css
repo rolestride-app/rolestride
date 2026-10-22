@@ -240,9 +240,52 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.text-clear-btn {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.text-clear-btn:hover {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.field-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 4px;
+}
+
+.field-toolbar .text-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0f766e;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.field-toolbar .text-link:hover {
+  color: #115e59;
 }
 
 .field-actions {
@@ -521,6 +564,12 @@ textarea {
 .pro-lock-wrapper {
   position: relative;
   min-height: 480px;
+}
+
+.pro-lock-wrapper.locked {
+  max-height: 540px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
 }
 
 .pro-lock-wrapper.locked .formatted-resume-paper,
@@ -1105,14 +1154,22 @@ textarea {
     margin-bottom: 16px;
   }
   .field-top label {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
+  }
+  .text-clear-btn {
+    font-size: 0.74rem;
+    padding: 2px 4px;
+  }
+  .field-toolbar {
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .field-toolbar .text-link {
+    font-size: 0.76rem;
   }
   .field-actions {
     gap: 4px 10px;
     flex-wrap: wrap;
-  }
-  .field-top .text-link {
-    font-size: 0.75rem;
   }
   .field-card textarea {
     min-height: 160px;
@@ -1325,6 +1382,10 @@ textarea {
   }
 
   /* Pro Lock Screens */
+  .pro-lock-wrapper.locked {
+    max-height: 480px;
+    overflow: hidden;
+  }
   .pro-lock-overlay {
     padding: 16px 10px 36px;
     align-items: flex-start;
