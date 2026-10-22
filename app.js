@@ -172,7 +172,7 @@
 
   const SAMPLE_RESUME = `PRIYA SHARMA
 
-priya.sharma@email.com | +91 98765 43210 | Bengaluru, India | linkedin.com/in/priya-sharma-data
+priya.sharma@email.com | +91 98765 43210 | Bengaluru, India | linkedin.com/in/priya-sharma-data | priyasharma.dev
 
 
 
@@ -509,6 +509,212 @@ Key Responsibilities:
   }
 
 
+
+  // ==========================================
+  // HYPERLINK & CONTACT INTELLIGENCE HELPERS
+  // ==========================================
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function normalizeContactUrl(url) {
+    if (!url) return "";
+    url = url.trim();
+    if (/^(?:mailto:|tel:)/i.test(url)) return url;
+    if (/^https?:\/\//i.test(url)) return url;
+    return "https://" + url.replace(/^\/+/, "");
+  }
+
+  function parseContactString(str) {
+    if (!str || typeof str !== "string") return [];
+    const tokens = str.split(/\s*(?:•|\||·|\s{3,})\s*/).map((s) => s.trim()).filter(Boolean);
+
+    return tokens.map((token) => {
+      let label = "";
+      let val = token;
+      const labelMatch = token.match(/^(LinkedIn|GitHub|Portfolio|Website|Site|Email|Phone|Tel|Mobile|Loc|Location)\s*[:\-]\s*(.*)$/i);
+      if (labelMatch) {
+        label = labelMatch[1];
+        val = labelMatch[2].trim();
+      }
+
+      // 1. Email address
+      if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val) || /^mailto:/i.test(val)) {
+        const email = val.replace(/^mailto:/i, "");
+        return {
+          text: token,
+          displayText: label ? `${label}: ${email}` : email,
+          url: `mailto:${email}`,
+          type: "email",
+          isLink: true
+        };
+      }
+
+      // 2. LinkedIn URL / handle
+      if (/linkedin\.com\/(?:in|company)\/[a-zA-Z0-9_\-\/]+/i.test(val)) {
+        const match = val.match(/(?:https?:\/\/)?(?:www\.)?(linkedin\.com\/(?:in|company)\/[a-zA-Z0-9_\-\/]+)/i);
+        const cleanPath = match ? match[1].replace(/\/+$/, "") : val;
+        return {
+          text: token,
+          displayText: label ? `${label}: ${cleanPath}` : cleanPath,
+          url: "https://" + cleanPath.replace(/^https?:\/\//, ""),
+          type: "linkedin",
+          isLink: true
+        };
+      }
+
+      // 3. GitHub URL / handle
+      if (/github\.com\/[a-zA-Z0-9_\-]+/i.test(val)) {
+        const match = val.match(/(?:https?:\/\/)?(?:www\.)?(github\.com\/[a-zA-Z0-9_\-]+)/i);
+        const cleanPath = match ? match[1].replace(/\/+$/, "") : val;
+        return {
+          text: token,
+          displayText: label ? `${label}: ${cleanPath}` : cleanPath,
+          url: "https://" + cleanPath.replace(/^https?:\/\//, ""),
+          type: "github",
+          isLink: true
+        };
+      }
+
+      // 4. Phone number
+      if (
+        /^(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{4}$/.test(val) ||
+        /^(?:\+91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}$/.test(val.replace(/\s+/g, "")) ||
+        /^\+?\d{10,13}$/.test(val.replace(/[\s\-()]/g, ""))
+      ) {
+        const digits = val.replace(/[^\d+]/g, "");
+        return {
+          text: token,
+          displayText: token,
+          url: `tel:${digits}`,
+          type: "phone",
+          isLink: true
+        };
+      }
+
+      // 5. Portfolio / Website / Behance / Dribbble / Medium / Kaggle / Personal Domain
+      if (
+        /^(?:https?:\/\/|www\.)/i.test(val) ||
+        /\.(?:dev|me|design|io|app|ai|site|portfolio|tech|org|net|com|co)(?:\/.*)?$/i.test(val) ||
+        /behance\.net|dribbble\.com|medium\.com|kaggle\.com|linktr\.ee|vercel\.app|netlify\.app/i.test(val) ||
+        /portfolio|website|site/i.test(label)
+      ) {
+        const cleanDisplay = val.replace(/^https?:\/\/(?:www\.)?/i, "").replace(/\/+$/, "");
+        return {
+          text: token,
+          displayText: label ? `${label}: ${cleanDisplay}` : cleanDisplay,
+          url: normalizeContactUrl(val),
+          type: "portfolio",
+          isLink: true
+        };
+      }
+
+      // 6. Plain text (e.g. Location: Bengaluru, India)
+      return {
+        text: token,
+        displayText: token,
+        url: null,
+        type: "text",
+        isLink: false
+      };
+    });
+  }
+
+  function renderContactHTML(contactStr) {
+    if (!contactStr || typeof contactStr !== "string") return "";
+    const items = parseContactString(contactStr);
+    if (!items || items.length === 0) return escapeHtml(contactStr);
+
+    return items
+      .map((item) => {
+        if (item.isLink && item.url) {
+          const titleAttr = item.type === "email"
+            ? `Send email to ${escapeHtml(item.displayText)}`
+            : item.type === "phone"
+            ? `Call ${escapeHtml(item.displayText)}`
+            : `Open ${escapeHtml(item.displayText)}`;
+          return `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="exec-contact-link" title="${titleAttr}">${escapeHtml(item.displayText)}</a>`;
+        }
+        return `<span class="exec-contact-text">${escapeHtml(item.displayText)}</span>`;
+      })
+      .join('<span class="exec-contact-sep"> • </span>');
+  }
+
+  function autolinkText(text) {
+    if (!text || typeof text !== "string") return "";
+    if (text.includes("<a ")) return text;
+    return text.replace(
+      /\b((?:https?:\/\/|www\.)[^\s<]+|(?:github\.com|linkedin\.com)\/[^\s<]+)/gi,
+      (match) => {
+        let trailing = "";
+        const trailMatch = match.match(/[.,;:)]]+$/);
+        if (trailMatch) {
+          trailing = trailMatch[0];
+          match = match.slice(0, -trailing.length);
+        }
+        let url = match;
+        if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="exec-link">${match}</a>${trailing}`;
+      }
+    );
+  }
+
+  function drawContactLinePDF(doc, contactStr, centerX, startY, contentWidth) {
+    if (!contactStr || !contactStr.trim()) return startY;
+
+    doc.setFont("times", "normal");
+    doc.setFontSize(9.5);
+    const sep = "  •  ";
+    const sepW = doc.getTextWidth(sep);
+    const items = parseContactString(contactStr);
+    if (!items || items.length === 0) return startY;
+
+    // Wrap into multiple centered lines if needed so links never clip off the page
+    const lines = [];
+    let curLine = [];
+    let curW = 0;
+    for (const it of items) {
+      it.width = doc.getTextWidth(it.displayText);
+      const needed = (curLine.length > 0 ? sepW : 0) + it.width;
+      if (curLine.length > 0 && curW + needed > contentWidth) {
+        lines.push({ items: curLine, width: curW });
+        curLine = [it];
+        curW = it.width;
+      } else {
+        curLine.push(it);
+        curW += needed;
+      }
+    }
+    if (curLine.length > 0) lines.push({ items: curLine, width: curW });
+
+    let y = startY;
+    lines.forEach((line) => {
+      let curX = centerX - line.width / 2;
+      line.items.forEach((it, idx) => {
+        if (it.isLink && it.url) {
+          doc.setTextColor(30, 58, 138); // Classic executive navy for links
+          doc.textWithLink(it.displayText, curX, y, { url: it.url });
+        } else {
+          doc.setTextColor(75, 85, 99); // Dark neutral for plain text
+          doc.text(it.displayText, curX, y);
+        }
+        curX += it.width;
+        if (idx < line.items.length - 1) {
+          doc.setTextColor(156, 163, 175);
+          doc.text(sep, curX, y);
+          curX += sepW;
+        }
+      });
+      y += 11.5;
+    });
+    return y - 11.5 + 10;
+  }
 
   function extractSkillsFromText(text) {
 
@@ -930,30 +1136,71 @@ Key Responsibilities:
       name = "EXECUTIVE CANDIDATE";
     }
 
-    // 2. EXTRACT CONTACT INFO
+    // 2. EXTRACT CONTACT INFO & HYPERLINKS (Email, Phone, LinkedIn, GitHub, Portfolio)
     let contactEmail = "";
     let contactPhone = "";
     let contactLocation = "";
     let contactLinkedIn = "";
+    let contactGitHub = "";
+    let contactPortfolio = "";
 
     const emailMatch = rawResume.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-    if (emailMatch) contactEmail = emailMatch[0];
+    if (emailMatch) contactEmail = emailMatch[0].trim();
 
-    const phoneMatch = rawResume.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{4}|\+91[\s-]?\d{10}/);
-    if (phoneMatch) contactPhone = phoneMatch[0];
+    const phoneMatch = rawResume.match(/(?:\+91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}|(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{4}|\b\d{10}\b/);
+    if (phoneMatch) contactPhone = phoneMatch[0].trim();
 
-    const linkedInMatch = rawResume.match(/linkedin\.com\/in\/[a-zA-Z0-9_\-]+/i);
-    if (linkedInMatch) contactLinkedIn = linkedInMatch[0];
+    const linkedInMatch = rawResume.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/(?:in|company)\/[a-zA-Z0-9_\-\/]+/i);
+    if (linkedInMatch) {
+      let li = linkedInMatch[0].trim().replace(/^https?:\/\/(?:www\.)?/i, "").replace(/\/+$/, "");
+      contactLinkedIn = li;
+    }
 
-    const locations = ["Amritsar", "Punjab", "Bengaluru", "Bangalore", "Delhi", "Mumbai", "Pune", "Hyderabad", "Toronto", "Vancouver", "New York", "San Francisco", "London"];
-    for (const loc of locations) {
-      if (new RegExp("\\b" + loc + "\\b", "i").test(rawResume)) {
-        contactLocation = loc + (["Amritsar", "Punjab", "Bengaluru", "Bangalore", "Delhi", "Mumbai", "Pune", "Hyderabad"].includes(loc) ? ", India" : "");
-        break;
+    const githubMatch = rawResume.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/[a-zA-Z0-9_\-]+/i);
+    if (githubMatch) {
+      let gh = githubMatch[0].trim().replace(/^https?:\/\/(?:www\.)?/i, "").replace(/\/+$/, "");
+      contactGitHub = gh;
+    }
+
+    // Portfolio / personal website / Behance / Dribbble
+    const portfolioMatch = rawResume.match(/(?:portfolio|website|site|web)[\s:]+(?:https?:\/\/)?([a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]+)/i);
+    if (portfolioMatch) {
+      let p = portfolioMatch[1].replace(/^[ \t:]+/, "").trim().replace(/^https?:\/\/(?:www\.)?/i, "").replace(/\/+$/, "");
+      if (!p.includes("linkedin.com") && !p.includes("github.com") && !p.includes("@")) {
+        contactPortfolio = p;
+      }
+    } else {
+      const otherUrlMatch = rawResume.match(/(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.dev|\.me|\.design|\.tech|\.site|\.io|\.app|\.ai|\.portfolio|behance\.net\/[a-zA-Z0-9_\-]+|dribbble\.com\/[a-zA-Z0-9_\-]+|kaggle\.com\/[a-zA-Z0-9_\-]+|medium\.com\/@[a-zA-Z0-9_\-]+)(?:\/[^\s•|,]*)?/i);
+      if (otherUrlMatch) {
+        let p = otherUrlMatch[0].trim().replace(/^https?:\/\/(?:www\.)?/i, "").replace(/\/+$/, "");
+        if (!p.includes("linkedin.com") && !p.includes("github.com") && !p.includes("@")) {
+          contactPortfolio = p;
+        }
       }
     }
 
-    const contactParts = [contactLocation, contactEmail, contactPhone, contactLinkedIn].filter(Boolean);
+    const locations = ["Amritsar", "Punjab", "Bengaluru", "Bangalore", "Delhi", "Mumbai", "Pune", "Hyderabad", "Chandigarh", "Noida", "Gurugram", "Gurgaon", "Chennai", "Kolkata", "Ahmedabad", "Jaipur", "Toronto", "Vancouver", "New York", "San Francisco", "London", "Seattle", "Austin", "Chicago"];
+    for (const loc of locations) {
+      const locRegex = new RegExp("\\b" + loc + "(?:,\\s*[A-Z]{2}|,\\s*[A-Za-z]+)?\\b", "i");
+      const match = rawResume.match(locRegex);
+      if (match) {
+        let captured = match[0].trim();
+        if (["Amritsar", "Punjab", "Bengaluru", "Bangalore", "Delhi", "Mumbai", "Pune", "Hyderabad", "Chandigarh", "Noida", "Gurugram", "Gurgaon", "Chennai", "Kolkata", "Ahmedabad", "Jaipur"].includes(loc) && !captured.toLowerCase().includes("india")) {
+          captured += ", India";
+        }
+        contactLocation = captured;
+        break;
+      }
+    }
+    if (!contactLocation) {
+      const topLines = rawResume.split("\n").slice(0, 5).join(" ");
+      const locMatch = topLines.match(/([A-Z][a-zA-Z\s]{2,18}),\s*([A-Z]{2}|[A-Z][a-zA-Z]{3,15})/);
+      if (locMatch && !locMatch[0].toLowerCase().includes("university") && !locMatch[0].toLowerCase().includes("college")) {
+        contactLocation = locMatch[0].trim();
+      }
+    }
+
+    const contactParts = [contactLocation, contactEmail, contactPhone, contactLinkedIn, contactGitHub, contactPortfolio].filter(Boolean);
     const contact = contactParts.length > 0 ? contactParts.join("  •  ") : (contactLocation ? contactLocation : "");
 
     // 3. ROLE TITLE ALIGNMENT
@@ -1185,7 +1432,7 @@ Key Responsibilities:
 
       .map((entry) => {
 
-        const bulletsHtml = entry.bullets.map((b) => `<li>${b}</li>`).join("");
+        const bulletsHtml = entry.bullets.map((b) => `<li>${autolinkText(b)}</li>`).join("");
 
         return `
 
@@ -1223,7 +1470,7 @@ Key Responsibilities:
 
           .map((proj) => {
 
-            const bulletsHtml = proj.bullets.map((b) => `<li>${b}</li>`).join("");
+            const bulletsHtml = proj.bullets.map((b) => `<li>${autolinkText(b)}</li>`).join("");
 
             return `
 
@@ -1307,7 +1554,7 @@ Key Responsibilities:
 
         <div class="exec-role">${data.roleTitle}</div>
 
-        <div class="exec-contact">${data.contact}</div>
+        <div class="exec-contact">${renderContactHTML(data.contact)}</div>
 
       </div>
 
@@ -1902,7 +2149,7 @@ ${data.name}`;
             <div class="exec-header">
               <div class="exec-name">${data.name}</div>
               <div class="exec-role">${data.roleTitle}</div>
-              <div class="exec-contact">${data.contact}</div>
+              <div class="exec-contact">${renderContactHTML(data.contact)}</div>
             </div>
 
             <div style="margin: 20px 0 16px; font-size: 0.88rem; color: #4b5563; line-height: 1.45;">
@@ -2334,17 +2581,7 @@ ${data.name}`;
 
 
     if (data.contact && data.contact.trim().length > 0) {
-
-      doc.setFont("times", "normal");
-
-      doc.setFontSize(9.5);
-
-      doc.setTextColor(75, 85, 99);
-
-      doc.text(data.contact, centerX, y, { align: "center" });
-
-      y += 10;
-
+      y = drawContactLinePDF(doc, data.contact, centerX, y, contentWidth);
     }
 
 
@@ -2758,17 +2995,7 @@ ${data.name}`;
 
 
     if (candidateContact && candidateContact.trim().length > 0) {
-
-      doc.setFont("times", "normal");
-
-      doc.setFontSize(9.5);
-
-      doc.setTextColor(75, 85, 99);
-
-      doc.text(candidateContact, centerX, y, { align: "center" });
-
-      y += 10;
-
+      y = drawContactLinePDF(doc, candidateContact, centerX, y, contentWidth);
     }
 
 
@@ -3119,7 +3346,32 @@ ${data.name}`;
 
     if (btnResetResumeEdits) {
 
-      btnResetResumeEdits.addEventListener("click", () => {
+          // Delegated click handler so clicking links inside contenteditable papers opens them in a new tab immediately
+    const resumePaperEl = document.getElementById("formattedResumePaper");
+    if (resumePaperEl) {
+      resumePaperEl.addEventListener("click", (e) => {
+        const link = e.target.closest("a.exec-contact-link, a.exec-link");
+        if (link && link.href) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(link.href, "_blank", "noopener,noreferrer");
+        }
+      });
+    }
+
+    const coverPaperEl = document.getElementById("formattedCoverLetterPaper");
+    if (coverPaperEl) {
+      coverPaperEl.addEventListener("click", (e) => {
+        const link = e.target.closest("a.exec-contact-link, a.exec-link");
+        if (link && link.href) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(link.href, "_blank", "noopener,noreferrer");
+        }
+      });
+    }
+
+    btnResetResumeEdits.addEventListener("click", () => {
 
         if (!originalGeneratedResume) return;
 
@@ -3154,12 +3406,13 @@ ${data.name}`;
       btnOpenProModal.addEventListener("click", () => {
         if (isProUnlocked()) {
           const toggleOff = window.confirm(
-            "Pro Access is currently ACTIVE (Lifetime Access).\n\n• Click OK to switch back to Free Preview Mode (to test paywalls/watermarks).\n• Click Cancel to remain in Pro Mode."
+            "Pro Access is currently ACTIVE on this browser.\n\n• Click OK to LOCK all Pro features (Cover Letter, LinkedIn, Interview Playbook, Outreach) to test what free visitors see.\n• Click Cancel to keep Pro unlocked."
           );
           if (toggleOff) {
             localStorage.removeItem("rp_pro_paid_v1");
+            localStorage.removeItem("rp_pro_unlocked");
             updateProStatusUI();
-            showToast("Switched to Free Preview Mode");
+            showToast("All Pro features are now LOCKED!");
           }
         } else {
           openProModal();
@@ -3268,15 +3521,37 @@ ${data.name}`;
       });
     }
 
-    document.getElementById("btnClearInputs").addEventListener("click", () => {
+    const btnClearResume = document.getElementById("btnClearResume");
+    if (btnClearResume) {
+      btnClearResume.addEventListener("click", () => {
+        resumeInput.value = "";
+        const fileInput = document.getElementById("resumeFileUpload");
+        if (fileInput) fileInput.value = "";
+        updateLivePage1Match();
+        showToast("Resume cleared");
+      });
+    }
 
-      resumeInput.value = "";
+    const btnClearJob = document.getElementById("btnClearJob");
+    if (btnClearJob) {
+      btnClearJob.addEventListener("click", () => {
+        jobInput.value = "";
+        updateLivePage1Match();
+        showToast("Job description cleared");
+      });
+    }
 
-      jobInput.value = "";
-
-      updateLivePage1Match();
-
-    });
+    const btnClearInputs = document.getElementById("btnClearInputs");
+    if (btnClearInputs) {
+      btnClearInputs.addEventListener("click", () => {
+        resumeInput.value = "";
+        jobInput.value = "";
+        const fileInput = document.getElementById("resumeFileUpload");
+        if (fileInput) fileInput.value = "";
+        updateLivePage1Match();
+        showToast("Cleared both inputs");
+      });
+    }
 
 
 

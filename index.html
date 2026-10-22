@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3.3.0" />
+  <link rel="stylesheet" href="styles.css?v=3.7.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -64,6 +64,7 @@
                 Upload Resume (.pdf / .txt)
                 <input type="file" id="resumeFileUpload" accept=".pdf,.txt,.md" style="display:none;" />
               </label>
+              <button type="button" id="btnClearResume" class="text-link">Clear</button>
             </div>
           </div>
           <textarea id="resumeInput" placeholder="Paste your current resume text here (or click 'Upload Resume' / 'Load Sample' above)..."></textarea>
@@ -75,7 +76,7 @@
             <label for="jobInput">2. Job Description</label>
             <div class="field-actions">
               <button type="button" id="btnLoadSampleJob" class="text-link" style="font-weight:600; color:#0f766e;">Load Sample Job</button>
-              <button type="button" id="btnClearInputs" class="text-link">Clear both</button>
+              <button type="button" id="btnClearJob" class="text-link">Clear</button>
             </div>
           </div>
           <textarea id="jobInput" placeholder="Paste the target job description from LinkedIn, Indeed, or Naukri here..."></textarea>
@@ -137,7 +138,7 @@
         </div>
       </div>
 
-      <!-- TAB 1: TAILORED RESUME -->
+            <!-- TAB 1: TAILORED RESUME -->
       <div id="docResumePane" class="doc-pane active">
         <!-- Live Edit Alert Bar -->
         <div class="edit-hint-bar">
@@ -154,15 +155,31 @@
 
       <!-- TAB 2: COVER LETTER -->
       <div id="docCoverPane" class="doc-pane">
-        <div class="pro-lock-wrapper" id="coverLockWrapper">
+        <div class="pro-lock-wrapper locked" id="coverLockWrapper">
           <div class="pro-lock-overlay">
             <div class="lock-card">
-              <div class="lock-icon-badge">🔒</div>
-              <h3>Unlock Your Tailored Cover Letter</h3>
-              <p>Upgrade to Pro for a one-time $15 payment to unlock your custom Cover Letter, 10-Question Interview Playbook, LinkedIn Profile Optimizer, and clean Resume PDFs.</p>
-              <button type="button" class="btn btn-emerald btn-OpenProTrigger" style="width:100%;">
-                Unlock Pro — $15 One-Time
+              <div class="lock-card-header">
+                <div class="lock-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg></div>
+                <span class="lock-pro-pill">PRO FEATURE</span>
+              </div>
+              <h3>Tailored Executive Cover Letter</h3>
+              <p class="lock-card-desc">Upgrade to Pro for a one-time $15 payment to unlock your complete Job Search &amp; Interview Kit.</p>
+              <ul class="lock-card-bullets">
+                <li>✓ <strong>100% Tailored</strong> to your target job &amp; company</li>
+                <li>✓ <strong>Executive Stationery</strong> matching your resume</li>
+                <li>✓ <strong>Instant Clean PDF</strong> download &amp; 1-click copy</li>
+              </ul>
+              <div class="lock-card-price-row">
+                <span class="lock-price-badge">$15 One-Time</span>
+                <span class="lock-price-sub">• Lifetime Access • No Subscription</span>
+              </div>
+              <button type="button" class="btn btn-emerald btn-lg btn-OpenProTrigger" style="width:100%; font-weight:700;">
+                Unlock Pro Access ($15)
               </button>
+              <div class="lock-card-footnote">🔒 100% Private in your browser • Instant access</div>
             </div>
           </div>
 
@@ -182,15 +199,31 @@
 
       <!-- TAB 3: LINKEDIN PROFILE OPTIMIZER -->
       <div id="docLinkedInPane" class="doc-pane">
-        <div class="pro-lock-wrapper" id="linkedinLockWrapper">
+        <div class="pro-lock-wrapper locked" id="linkedinLockWrapper">
           <div class="pro-lock-overlay">
             <div class="lock-card">
-              <div class="lock-icon-badge">🔒</div>
-              <h3>Unlock LinkedIn Profile Optimizer</h3>
-              <p>Get 3 recruiter-ranking headlines, a complete 3-paragraph "About" summary, and top skill badges to pin on your profile.</p>
-              <button type="button" class="btn btn-emerald btn-OpenProTrigger" style="width:100%;">
-                Unlock Pro — $15 One-Time
+              <div class="lock-card-header">
+                <div class="lock-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg></div>
+                <span class="lock-pro-pill">PRO FEATURE</span>
+              </div>
+              <h3>LinkedIn Profile &amp; SEO Optimizer</h3>
+              <p class="lock-card-desc">Rank at the top of LinkedIn Recruiter searches for this target role.</p>
+              <ul class="lock-card-bullets">
+                <li>✓ <strong>3 Recruiter-Ranking Headlines</strong> tailored to this job</li>
+                <li>✓ <strong>3-Paragraph "About" Story</strong> highlighting top wins</li>
+                <li>✓ <strong>Top Hard Skills</strong> to pin on your profile</li>
+              </ul>
+              <div class="lock-card-price-row">
+                <span class="lock-price-badge">$15 One-Time</span>
+                <span class="lock-price-sub">• Lifetime Access • No Subscription</span>
+              </div>
+              <button type="button" class="btn btn-emerald btn-lg btn-OpenProTrigger" style="width:100%; font-weight:700;">
+                Unlock Pro Access ($15)
               </button>
+              <div class="lock-card-footnote">🔒 100% Private in your browser • Instant access</div>
             </div>
           </div>
           <div class="pane-action-header">
@@ -205,15 +238,31 @@
 
       <!-- TAB 4: 10-QUESTION INTERVIEW PLAYBOOK -->
       <div id="docInterviewPane" class="doc-pane">
-        <div class="pro-lock-wrapper" id="interviewLockWrapper">
+        <div class="pro-lock-wrapper locked" id="interviewLockWrapper">
           <div class="pro-lock-overlay">
             <div class="lock-card">
-              <div class="lock-icon-badge">🔒</div>
-              <h3>Unlock Complete 10-Question Interview Playbook</h3>
-              <p>Get 10 role-specific technical &amp; behavioral questions, word-for-word STAR answers, a 60-second elevator pitch, salary negotiation script, and printable PDF guide.</p>
-              <button type="button" class="btn btn-emerald btn-OpenProTrigger" style="width:100%;">
-                Unlock Pro — $15 One-Time
+              <div class="lock-card-header">
+                <div class="lock-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg></div>
+                <span class="lock-pro-pill">PRO FEATURE</span>
+              </div>
+              <h3>10-Question Interview Playbook</h3>
+              <p class="lock-card-desc">Role-specific interview preparation tailored to your target company.</p>
+              <ul class="lock-card-bullets">
+                <li>✓ <strong>10 Role-Specific Questions</strong> &amp; word-for-word STAR answers</li>
+                <li>✓ <strong>60-Second Elevator Pitch</strong> &amp; salary negotiation scripts</li>
+                <li>✓ <strong>Printable Interview Guide PDF</strong> for your notes</li>
+              </ul>
+              <div class="lock-card-price-row">
+                <span class="lock-price-badge">$15 One-Time</span>
+                <span class="lock-price-sub">• Lifetime Access • No Subscription</span>
+              </div>
+              <button type="button" class="btn btn-emerald btn-lg btn-OpenProTrigger" style="width:100%; font-weight:700;">
+                Unlock Pro Access ($15)
               </button>
+              <div class="lock-card-footnote">🔒 100% Private in your browser • Instant access</div>
             </div>
           </div>
           <div class="pane-action-header">
@@ -231,15 +280,31 @@
 
       <!-- TAB 5: RECRUITER & HIRING MANAGER OUTREACH -->
       <div id="docOutreachPane" class="doc-pane">
-        <div class="pro-lock-wrapper" id="outreachLockWrapper">
+        <div class="pro-lock-wrapper locked" id="outreachLockWrapper">
           <div class="pro-lock-overlay">
             <div class="lock-card">
-              <div class="lock-icon-badge">🔒</div>
-              <h3>Unlock Recruiter &amp; Hiring Manager Outreach</h3>
-              <p>Get ready-to-send LinkedIn connection notes, cold emails to the hiring manager, and post-interview follow-up scripts tailored to this role.</p>
-              <button type="button" class="btn btn-emerald btn-OpenProTrigger" style="width:100%;">
-                Unlock Pro — $15 One-Time
+              <div class="lock-card-header">
+                <div class="lock-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg></div>
+                <span class="lock-pro-pill">PRO FEATURE</span>
+              </div>
+              <h3>Recruiter &amp; Hiring Manager Outreach</h3>
+              <p class="lock-card-desc">Ready-to-send messages that get responses from decision-makers.</p>
+              <ul class="lock-card-bullets">
+                <li>✓ <strong>LinkedIn Connection Notes</strong> (under 300 characters)</li>
+                <li>✓ <strong>Hiring Manager Cold Emails</strong> highlighting your top skills</li>
+                <li>✓ <strong>Post-Interview Follow-Up</strong> email templates</li>
+              </ul>
+              <div class="lock-card-price-row">
+                <span class="lock-price-badge">$15 One-Time</span>
+                <span class="lock-price-sub">• Lifetime Access • No Subscription</span>
+              </div>
+              <button type="button" class="btn btn-emerald btn-lg btn-OpenProTrigger" style="width:100%; font-weight:700;">
+                Unlock Pro Access ($15)
               </button>
+              <div class="lock-card-footnote">🔒 100% Private in your browser • Instant access</div>
             </div>
           </div>
           <div id="outreachContainer" class="qa-list-container"></div>
@@ -314,7 +379,7 @@
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js?v=3.3.0"></script>
-  <script src="app.js?v=3.3.0"></script>
+  <script src="config.js?v=3.7.0"></script>
+  <script src="app.js?v=3.7.0"></script>
 </body>
 </html>
