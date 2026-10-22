@@ -92,7 +92,31 @@
             "name": "Is my resume data private and secure?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "100% private. RoleStride processes and renders your resume directly inside your local web browser. Your resume, job descriptions, and personal details are never stored on external databases or used to train public models."
+              "text": "100% private. RoleStride processes and renders your resume directly inside your local web browser sandbox. Your resume, job descriptions, and personal details are never transmitted to external databases or used to train public models."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is RoleStride safe to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, RoleStride is 100% safe. The application executes locally in your browser with zero remote database storage. It never asks for sensitive government IDs (such as Aadhaar or PAN) or passwords. Payment processing is safely handled by Gumroad (PCI-DSS Level 1 certified)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does RoleStride handle payments?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RoleStride does not collect or store credit card, UPI, or banking information. All transactions are securely processed by Gumroad, an international PCI-DSS Level 1 compliant merchant of record supporting UPI, Cards, and PayPal."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Who operates RoleStride?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RoleStride is operated by RoleStride Studio (official support: support@rolestride.app) as an independent career technology suite."
             }
           },
           {
@@ -113,7 +137,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3.11.0" />
+  <link rel="stylesheet" href="styles.css?v=3.12.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -405,6 +429,49 @@
 
     </section>
 
+    <!-- ====================================================================
+         TRUST & PRIVACY ARCHITECTURE SECTION
+         ==================================================================== -->
+    <section class="trust-architecture-section" id="securityTrustSection">
+      <div class="trust-container">
+        <div class="trust-header">
+          <span class="trust-badge">🔒 Privacy-First Architecture</span>
+          <h3>Zero-Data Retention Security Guarantee</h3>
+          <p>RoleStride was engineered so candidates never have to trust an external server with their confidential career details.</p>
+        </div>
+
+        <div class="trust-grid">
+          <div class="trust-card">
+            <div class="trust-card-icon">💻</div>
+            <h4>100% In-Browser Execution</h4>
+            <p>All resume parsing, ATS keyword analysis, and PDF generation execute locally inside your web browser sandbox. Your resume text is never transmitted over the internet to remote servers.</p>
+          </div>
+
+          <div class="trust-card">
+            <div class="trust-card-icon">🛡️</div>
+            <h4>Zero Remote Database Storage</h4>
+            <p>We do not operate backend user databases. Your career history, contact information, and job descriptions are never saved, shared, sold, or used to train public AI models.</p>
+          </div>
+
+          <div class="trust-card">
+            <div class="trust-card-icon">💳</div>
+            <h4>Certified PCI-DSS Payments</h4>
+            <p>All monetization is managed through Gumroad (a certified PCI-DSS Level 1 compliant merchant). RoleStride never asks for, touches, or stores your credit card, UPI, or banking credentials.</p>
+          </div>
+
+          <div class="trust-card">
+            <div class="trust-card-icon">🏛️</div>
+            <h4>Harvard 1-Page ATS Standard</h4>
+            <p>Built strictly according to Fortune 500 ATS scanning guidelines (single-column, clean typography, quantified bullet points) to ensure 100% parse success in Workday, Greenhouse, and Lever.</p>
+          </div>
+        </div>
+
+        <div class="trust-footer-note">
+          <span>Operated by <strong>RoleStride Studio</strong> • Official Support: <a href="mailto:support@rolestride.app">support@rolestride.app</a> • Deployed transparently on GitHub Pages.</span>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Minimal Footer -->
@@ -471,7 +538,7 @@
   <!-- Toast Notification -->
   <div id="toastNotification" class="toast">Done</div>
 
-  <script src="config.js?v=3.11.0"></script>
-  <script src="app.js?v=3.11.0"></script>
+  <script src="config.js?v=3.12.0"></script>
+  <script src="app.js?v=3.12.0"></script>
 </body>
 </html>

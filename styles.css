@@ -1513,3 +1513,94 @@ textarea {
     flex-shrink: 0;
   }
 }
+
+/* Trust & Privacy Architecture Section */
+.trust-architecture-section {
+  background: #f8fafc;
+  border-top: 1px solid var(--border-light);
+  padding: 44px 20px;
+  margin-top: 40px;
+}
+
+.trust-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.trust-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.trust-badge {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  border: 1px solid #a7f3d0;
+}
+
+.trust-header h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.trust-header p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.trust-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.trust-card-icon {
+  font-size: 1.35rem;
+  margin-bottom: 10px;
+}
+
+.trust-card h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.trust-card p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.trust-footer-note {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-light);
+}
+
+.trust-footer-note a {
+  color: #0f766e;
+  text-decoration: underline;
+}
