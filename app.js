@@ -314,13 +314,13 @@ Key Responsibilities:
 
     refund: {
 
-      title: "Refund Policy",
+      title: "Digital Purchase Policy",
 
       html: `
 
-        <p><strong>1. Free Instant Preview:</strong> Users are encouraged to test match scores and preview tailored outputs before upgrading.</p>
+        <p><strong>1. Free Instant Preview:</strong> Candidates are encouraged to test match scores and preview tailored executive outputs before upgrading.</p>
 
-        <p><strong>2. Digital Purchase:</strong> Because RoleStride Pro delivers immediate digital asset access and feature unlocks, purchases are managed under Gumroad's standard digital goods policies.</p>
+        <p><strong>2. All Digital Sales Final:</strong> Due to the immediate digital delivery and permanent unlock of RoleStride Pro features, downloadable PDF assets, and interview materials, all purchases are non-refundable once unlocked. Order fulfillment is secured and managed by Gumroad.</p>
 
       `
 

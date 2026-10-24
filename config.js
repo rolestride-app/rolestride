@@ -9,7 +9,7 @@ window.ROLEPULSE_CONFIG = {
   tagline: "Privacy-First ATS Resume Matcher & Career Launch Kit",
   version: "1.0.0",
   ownerEntity: "RoleStride Independent Studio",
-  contactEmail: "support@rolestride.app", // Replace with your free Gmail support address when ready
+  contactEmail: "", // Managed through Gumroad customer order receipts
 
   // --------------------------------------------------------------------------
   // MONETIZATION LINKS ($0 Upfront Platforms)
