@@ -372,7 +372,7 @@ Key Responsibilities:
 
 
 
-  // Automatic unlock when buyer returns from Gumroad (?pro_unlocked=true)
+  // Automatic unlock when buyer returns from checkout (?pro_unlocked=true)
 
   function checkAutoUrlUnlock() {
 
@@ -3422,10 +3422,13 @@ ${data.name}`;
 
     const btnInstantProCheckout = document.getElementById("btnInstantProCheckout");
     if (btnInstantProCheckout) {
+      const checkoutUrl = CONFIG.proCheckoutUrl || CONFIG.gumroadProUrl || "https://rolestride.gumroad.com/l/pro?wanted=true";
+      btnInstantProCheckout.href = checkoutUrl;
       btnInstantProCheckout.addEventListener("click", () => {
-        const checkoutUrl = (CONFIG.gumroadProUrl && CONFIG.gumroadProUrl.trim()) ? CONFIG.gumroadProUrl.trim() : "https://gumroad.com";
         showToast("Opening secure $15 checkout...");
-        window.open(checkoutUrl, "_blank");
+        setTimeout(() => {
+          closeProModal();
+        }, 120);
       });
     }
 

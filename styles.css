@@ -1642,3 +1642,22 @@ textarea {
   color: #0f766e;
   text-decoration: underline;
 }
+
+/* Pro Checkout Link & Gumroad Overlay Styling Guarantee */
+a.btn.btn-emerald, a.gumroad-button.btn, button.gumroad-button.btn {
+  background: var(--accent-emerald) !important;
+  color: #ffffff !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: inherit !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+a.btn.btn-emerald:hover, a.gumroad-button.btn:hover, button.gumroad-button.btn:hover {
+  background: var(--accent-emerald-hover) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}

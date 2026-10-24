@@ -1,7 +1,7 @@
 // ============================================================================
 // ROLEPULSE - APPLICATION CONFIGURATION FILE (100% ZERO-COST SETUP)
 // ============================================================================
-// You can edit the links below anytime after you create your free Gumroad or
+// You can edit the links below anytime after you create your free Polar or
 // BuyMeACoffee account. No coding knowledge required!
 
 window.ROLEPULSE_CONFIG = {
@@ -14,9 +14,9 @@ window.ROLEPULSE_CONFIG = {
   // --------------------------------------------------------------------------
   // MONETIZATION LINKS ($0 Upfront Platforms)
   // --------------------------------------------------------------------------
-  // 1. Gumroad Pro Checkout Link (Create a free account at gumroad.com, create a
-  //    $15 product, and paste your product URL below)
-  gumroadProUrl: "https://rolestride.gumroad.com/l/pro",
+  // 1. Pro Checkout Link (Direct-to-checkout with in-app overlay)
+  proCheckoutUrl: "https://rolestride.gumroad.com/l/pro?wanted=true",
+  gumroadProUrl: "https://rolestride.gumroad.com/l/pro?wanted=true",
 
   // 2. Free Support / Tip Jar Link (Optional: BuyMeACoffee, Ko-fi, or Payhip)
   supportDonateUrl: "https://buymeacoffee.com",
